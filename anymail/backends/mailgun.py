@@ -17,7 +17,7 @@ from .base_requests import AnymailRequestsBackend, RequestsPayload
 # (Note: when this workaround is removed, please also remove the "old_urllib3" tox envs.)
 def is_requests_rfc_5758_compliant():
     request = Request(method='POST', url='https://www.example.com',
-                      files=[('attachment', (u'\N{NOT SIGN}.txt', 'test', 'text/plain'))])
+                      files=[('attachment', ('\N{NOT SIGN}.txt', 'test', 'text/plain'))])
     prepared = request.prepare()
     form_data = prepared.body  # bytes
     return b'filename*=' not in form_data

@@ -122,7 +122,7 @@ class SendgridInboundTestCase(WebhookTestCase):
         self.assertEqual(len(attachments), 2)
         self.assertEqual(attachments[0].get_filename(), 'test.txt')
         self.assertEqual(attachments[0].get_content_type(), 'text/plain')
-        self.assertEqual(attachments[0].get_content_text(), u'test attachment')
+        self.assertEqual(attachments[0].get_content_text(), 'test attachment')
         self.assertEqual(attachments[1].get_content_type(), 'message/rfc822')
         self.assertEqualIgnoringHeaderFolding(attachments[1].get_content_bytes(), email_content)
 
@@ -181,8 +181,8 @@ class SendgridInboundTestCase(WebhookTestCase):
         self.assertEqual(message.envelope_sender, 'envelope-from@example.org')
         self.assertEqual(message.envelope_recipient, 'test@inbound.example.com')
         self.assertEqual(message.subject, 'Raw MIME test')
-        self.assertEqual(message.text, u"It's a body\N{HORIZONTAL ELLIPSIS}\n")
-        self.assertEqual(message.html, u"""<div dir="ltr">It's a body\N{HORIZONTAL ELLIPSIS}</div>\n""")
+        self.assertEqual(message.text, "It's a body\N{HORIZONTAL ELLIPSIS}\n")
+        self.assertEqual(message.html, """<div dir="ltr">It's a body\N{HORIZONTAL ELLIPSIS}</div>\n""")
 
     def test_inbound_charsets(self):
         # Captured (sanitized) from actual SendGrid inbound webhook payload 7/2020,
@@ -231,11 +231,11 @@ class SendgridInboundTestCase(WebhookTestCase):
         event = kwargs['event']
         message = event.message
 
-        self.assertEqual(message.from_email.display_name, u"Opérateur de test")
+        self.assertEqual(message.from_email.display_name, "Opérateur de test")
         self.assertEqual(message.from_email.addr_spec, "sender@example.com")
         self.assertEqual(len(message.to), 1)
-        self.assertEqual(message.to[0].display_name, u"Récipiendaire précieux")
+        self.assertEqual(message.to[0].display_name, "Récipiendaire précieux")
         self.assertEqual(message.to[0].addr_spec, "inbound@sg.example.com")
-        self.assertEqual(message.subject, u"Como usted pidió")
-        self.assertEqual(message.text, u"Test the ESP’s inbound charset handling…")
-        self.assertEqual(message.html, u"<p>¿Esto se ve como esperabas?</p>")
+        self.assertEqual(message.subject, "Como usted pidió")
+        self.assertEqual(message.text, "Test the ESP’s inbound charset handling…")
+        self.assertEqual(message.html, "<p>¿Esto se ve como esperabas?</p>")

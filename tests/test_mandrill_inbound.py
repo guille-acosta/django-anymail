@@ -75,8 +75,8 @@ class MandrillInboundTestCase(WebhookTestCase):
         self.assertEqual(message.to[1].addr_spec, 'other@example.com')
         self.assertEqual(message.subject, 'Test subject')
         self.assertEqual(message.date.isoformat(" "), "2017-10-12 18:03:30-07:00")
-        self.assertEqual(message.text, u"It's a body\N{HORIZONTAL ELLIPSIS}\n")
-        self.assertEqual(message.html, u"""<div dir="ltr">It's a body\N{HORIZONTAL ELLIPSIS}</div>\n""")
+        self.assertEqual(message.text, "It's a body\N{HORIZONTAL ELLIPSIS}\n")
+        self.assertEqual(message.html, """<div dir="ltr">It's a body\N{HORIZONTAL ELLIPSIS}</div>\n""")
 
         self.assertIsNone(message.envelope_sender)  # Mandrill doesn't provide sender
         self.assertEqual(message.envelope_recipient, 'delivered-to@example.com')

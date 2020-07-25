@@ -66,11 +66,11 @@ class ParseAddressListTests(SimpleTestCase):
         self.assertEqual(parsed.address, 'Display Name <test@example.com>')
 
     def test_unicode_display_name(self):
-        parsed_list = parse_address_list([u'"Unicode \N{HEAVY BLACK HEART}" <test@example.com>'])
+        parsed_list = parse_address_list(['"Unicode \N{HEAVY BLACK HEART}" <test@example.com>'])
         self.assertEqual(len(parsed_list), 1)
         parsed = parsed_list[0]
         self.assertEqual(parsed.addr_spec, "test@example.com")
-        self.assertEqual(parsed.display_name, u"Unicode \N{HEAVY BLACK HEART}")
+        self.assertEqual(parsed.display_name, "Unicode \N{HEAVY BLACK HEART}")
         # formatted display-name automatically shifts to quoted-printable/base64 for non-ascii chars:
         self.assertEqual(parsed.address, '=?utf-8?b?VW5pY29kZSDinaQ=?= <test@example.com>')
 
@@ -83,13 +83,13 @@ class ParseAddressListTests(SimpleTestCase):
             parse_address_list(['Display Name, Inc. <test@example.com>'])
 
     def test_idn(self):
-        parsed_list = parse_address_list([u"idn@\N{ENVELOPE}.example.com"])
+        parsed_list = parse_address_list(["idn@\N{ENVELOPE}.example.com"])
         self.assertEqual(len(parsed_list), 1)
         parsed = parsed_list[0]
-        self.assertEqual(parsed.addr_spec, u"idn@\N{ENVELOPE}.example.com")
+        self.assertEqual(parsed.addr_spec, "idn@\N{ENVELOPE}.example.com")
         self.assertEqual(parsed.address, "idn@xn--4bi.example.com")  # punycode-encoded domain
         self.assertEqual(parsed.username, "idn")
-        self.assertEqual(parsed.domain, u"\N{ENVELOPE}.example.com")
+        self.assertEqual(parsed.domain, "\N{ENVELOPE}.example.com")
 
     def test_none_address(self):
         # used for, e.g., telling Mandrill to use template default from_email
@@ -141,8 +141,8 @@ class ParseAddressListTests(SimpleTestCase):
     def test_invalid_with_unicode(self):
         # (assertRaisesMessage can't handle unicode in Python 2)
         with self.assertRaises(AnymailInvalidAddress) as cm:
-            parse_address_list([u"\N{ENVELOPE}"])
-        self.assertIn(u"Invalid email address '\N{ENVELOPE}'", six.text_type(cm.exception))
+            parse_address_list(["\N{ENVELOPE}"])
+        self.assertIn("Invalid email address '\N{ENVELOPE}'", six.text_type(cm.exception))
 
     def test_single_string(self):
         # bare strings are used by the from_email parsing in BasePayload
@@ -224,7 +224,7 @@ class LazyCoercionTests(SimpleTestCase):
         self.assertTrue(is_lazy(ugettext_lazy("lazy string is lazy")))
 
     def test_not_lazy(self):
-        self.assertFalse(is_lazy(u"text not lazy"))
+        self.assertFalse(is_lazy("text not lazy"))
         self.assertFalse(is_lazy(b"bytes not lazy"))
         self.assertFalse(is_lazy(None))
         self.assertFalse(is_lazy({'dict': "not lazy"}))
@@ -233,31 +233,31 @@ class LazyCoercionTests(SimpleTestCase):
         self.assertFalse(is_lazy([ugettext_lazy("doesn't recurse")]))
 
     def test_force_lazy(self):
-        result = force_non_lazy(ugettext_lazy(u"text"))
+        result = force_non_lazy(ugettext_lazy("text"))
         self.assertIsInstance(result, six.text_type)
-        self.assertEqual(result, u"text")
+        self.assertEqual(result, "text")
 
     @skipIf(string_concat is None, "string_concat not in this Django version")
     def test_force_concat(self):
         self.assertTrue(is_lazy(string_concat(ugettext_lazy("concatenation"),
                                               ugettext_lazy("is lazy"))))
-        result = force_non_lazy(string_concat(ugettext_lazy(u"text"), ugettext_lazy("concat")))
+        result = force_non_lazy(string_concat(ugettext_lazy("text"), ugettext_lazy("concat")))
         self.assertIsInstance(result, six.text_type)
-        self.assertEqual(result, u"textconcat")
+        self.assertEqual(result, "textconcat")
 
     @skipIf(format_lazy is None, "format_lazy not in this Django version")
     def test_format_lazy(self):
         self.assertTrue(is_lazy(format_lazy("{0}{1}",
                                             ugettext_lazy("concatenation"), ugettext_lazy("is lazy"))))
         result = force_non_lazy(format_lazy("{first}/{second}",
-                                            first=ugettext_lazy(u"text"), second=ugettext_lazy("format")))
+                                            first=ugettext_lazy("text"), second=ugettext_lazy("format")))
         self.assertIsInstance(result, six.text_type)
-        self.assertEqual(result, u"text/format")
+        self.assertEqual(result, "text/format")
 
     def test_force_string(self):
-        result = force_non_lazy(u"text")
+        result = force_non_lazy("text")
         self.assertIsInstance(result, six.text_type)
-        self.assertEqual(result, u"text")
+        self.assertEqual(result, "text")
 
     def test_force_bytes(self):
         result = force_non_lazy(b"bytes \xFE")
@@ -269,15 +269,15 @@ class LazyCoercionTests(SimpleTestCase):
         self.assertIsNone(result)
 
     def test_force_dict(self):
-        result = force_non_lazy_dict({'a': 1, 'b': ugettext_lazy(u"b"),
-                                      'c': {'c1': ugettext_lazy(u"c1")}})
-        self.assertEqual(result, {'a': 1, 'b': u"b", 'c': {'c1': u"c1"}})
+        result = force_non_lazy_dict({'a': 1, 'b': ugettext_lazy("b"),
+                                      'c': {'c1': ugettext_lazy("c1")}})
+        self.assertEqual(result, {'a': 1, 'b': "b", 'c': {'c1': "c1"}})
         self.assertIsInstance(result['b'], six.text_type)
         self.assertIsInstance(result['c']['c1'], six.text_type)
 
     def test_force_list(self):
-        result = force_non_lazy_list([0, ugettext_lazy(u"b"), u"c"])
-        self.assertEqual(result, [0, u"b", u"c"])  # coerced to list
+        result = force_non_lazy_list([0, ugettext_lazy("b"), "c"])
+        self.assertEqual(result, [0, "b", "c"])  # coerced to list
         self.assertIsInstance(result[1], six.text_type)
 
 

@@ -255,7 +255,7 @@ class LazyStringsTest(TestBackendTestCase):
 
     def test_lazy_from(self):
         # This sometimes ends up lazy when settings.DEFAULT_FROM_EMAIL is meant to be localized
-        self.message.from_email = ugettext_lazy(u'"Global Sales" <sales@example.com>')
+        self.message.from_email = ugettext_lazy('"Global Sales" <sales@example.com>')
         self.message.send()
         params = self.get_send_params()
         self.assertNotLazy(params['from'].address)

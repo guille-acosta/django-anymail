@@ -131,9 +131,9 @@ except ImportError:
                 if (charset is None or prev_charset is None) and unicode_segments:
                     # Transitioning to, from, or between *non*-encoded segments:
                     # add back inter-segment whitespace that decode_header consumed
-                    unicode_segments.append(u" ")
+                    unicode_segments.append(" ")
                 decoded = raw.decode(charset, 'replace') if charset is not None else raw
                 unicode_segments.append(decoded)
                 prev_charset = charset
-            result = u"".join(unicode_segments)
+            result = "".join(unicode_segments)
         return result

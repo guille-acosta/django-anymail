@@ -203,7 +203,7 @@ class SparkPostBackendStandardEmailTests(SparkPostBackendMockAPITestCase):
     def test_unicode_attachment_correctly_decoded(self):
         # Slight modification from the Django unicode docs:
         # http://django.readthedocs.org/en/latest/ref/unicode.html#email
-        self.message.attach(u"Une pièce jointe.html", u'<p>\u2019</p>', mimetype='text/html')
+        self.message.attach("Une pièce jointe.html", '<p>\u2019</p>', mimetype='text/html')
         self.message.send()
         params = self.get_send_params()
         attachments = params['attachments']

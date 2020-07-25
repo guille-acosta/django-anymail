@@ -80,8 +80,8 @@ class SparkpostInboundTestCase(WebhookTestCase):
                          ['cc@example.com'])
         self.assertEqual(message.subject, 'Test subject')
         self.assertEqual(message.date.isoformat(" "), "2017-10-11 18:31:04-07:00")
-        self.assertEqual(message.text, u"It's a body\N{HORIZONTAL ELLIPSIS}\n")
-        self.assertEqual(message.html, u"""<div dir="ltr">It's a body\N{HORIZONTAL ELLIPSIS}</div>\n""")
+        self.assertEqual(message.text, "It's a body\N{HORIZONTAL ELLIPSIS}\n")
+        self.assertEqual(message.html, """<div dir="ltr">It's a body\N{HORIZONTAL ELLIPSIS}</div>\n""")
 
         self.assertEqual(message.envelope_sender, 'envelope-from@example.org')
         self.assertEqual(message.envelope_recipient, 'test@inbound.example.com')
@@ -158,7 +158,7 @@ class SparkpostInboundTestCase(WebhookTestCase):
         self.assertEqual(len(attachments), 2)
         self.assertEqual(attachments[0].get_filename(), 'test.txt')
         self.assertEqual(attachments[0].get_content_type(), 'text/plain')
-        self.assertEqual(attachments[0].get_content_text(), u'test attachment')
+        self.assertEqual(attachments[0].get_content_text(), 'test attachment')
         self.assertEqual(attachments[1].get_content_type(), 'message/rfc822')
         self.assertEqualIgnoringHeaderFolding(attachments[1].get_content_bytes(), email_content)
 

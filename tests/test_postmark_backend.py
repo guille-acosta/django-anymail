@@ -181,13 +181,13 @@ class PostmarkBackendStandardEmailTests(PostmarkBackendMockAPITestCase):
         self.assertNotIn('ContentID', attachments[2])
 
     def test_unicode_attachment_correctly_decoded(self):
-        self.message.attach(u"Une pièce jointe.html", u'<p>\u2019</p>', mimetype='text/html')
+        self.message.attach("Une pièce jointe.html", '<p>\u2019</p>', mimetype='text/html')
         self.message.send()
         data = self.get_api_call_json()
         self.assertEqual(data['Attachments'], [{
-            'Name': u'Une pièce jointe.html',
+            'Name': 'Une pièce jointe.html',
             'ContentType': 'text/html',
-            'Content': b64encode(u'<p>\u2019</p>'.encode('utf-8')).decode('ascii')
+            'Content': b64encode('<p>\u2019</p>'.encode('utf-8')).decode('ascii')
         }])
 
     def test_embedded_images(self):

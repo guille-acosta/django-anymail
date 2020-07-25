@@ -111,22 +111,22 @@ class AnymailRequestsBackend(AnymailBaseBackend):
         # If you need the raw bytes, configure HTTPConnection logging as shown
         # in http://docs.python-requests.org/en/v3.0.0/api/#api-changes)
         request = response.request  # a PreparedRequest
-        print(u"\n===== Anymail API request")
-        print(u"{method} {url}\n{headers}".format(
+        print("\n===== Anymail API request")
+        print("{method} {url}\n{headers}".format(
             method=request.method, url=request.url,
-            headers=u"".join(u"{header}: {value}\n".format(header=header, value=value)
-                             for (header, value) in request.headers.items()),
+            headers="".join("{header}: {value}\n".format(header=header, value=value)
+                            for (header, value) in request.headers.items()),
         ))
         if request.body is not None:
             body_text = (request.body if isinstance(request.body, six.text_type)
                          else request.body.decode("utf-8", errors="replace")
                          ).replace("\r\n", "\n")
             print(body_text)
-        print(u"\n----- Response")
-        print(u"HTTP {status} {reason}\n{headers}\n{body}".format(
+        print("\n----- Response")
+        print("HTTP {status} {reason}\n{headers}\n{body}".format(
             status=response.status_code, reason=response.reason,
-            headers=u"".join(u"{header}: {value}\n".format(header=header, value=value)
-                             for (header, value) in response.headers.items()),
+            headers="".join("{header}: {value}\n".format(header=header, value=value)
+                            for (header, value) in response.headers.items()),
             body=response.text,  # Let Requests decode body content for us
         ))
 

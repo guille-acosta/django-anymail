@@ -168,7 +168,7 @@ class MandrillBackendStandardEmailTests(MandrillBackendMockAPITestCase):
         self.assertFalse('images' in data['message'])
 
     def test_unicode_attachment_correctly_decoded(self):
-        self.message.attach(u"Une pièce jointe.html", u'<p>\u2019</p>', mimetype='text/html')
+        self.message.attach("Une pièce jointe.html", '<p>\u2019</p>', mimetype='text/html')
         self.message.send()
         data = self.get_api_call_json()
         attachments = data['message']['attachments']

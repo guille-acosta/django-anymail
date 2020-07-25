@@ -162,13 +162,13 @@ def parse_address_list(address_list, field=None):
     for address in parsed:
         if address.username == '' or address.domain == '':
             # Django SMTP allows username-only emails, but they're not meaningful with an ESP
-            errmsg = u"Invalid email address '{problem}' parsed from '{source}'{where}.".format(
+            errmsg = "Invalid email address '{problem}' parsed from '{source}'{where}.".format(
                 problem=address.addr_spec,
-                source=u", ".join(address_list_strings),
-                where=u" in `%s`" % field if field else "",
+                source=", ".join(address_list_strings),
+                where=" in `%s`" % field if field else "",
             )
             if len(parsed) > len(address_list):
-                errmsg += u" (Maybe missing quotes around a display-name?)"
+                errmsg += " (Maybe missing quotes around a display-name?)"
             raise AnymailInvalidAddress(errmsg)
 
     return parsed

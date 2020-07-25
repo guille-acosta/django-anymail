@@ -220,11 +220,11 @@ class SendGridBackendStandardEmailTests(SendGridBackendMockAPITestCase):
             'type': "application/pdf"})
 
     def test_unicode_attachment_correctly_decoded(self):
-        self.message.attach(u"Une pièce jointe.html", u'<p>\u2019</p>', mimetype='text/html')
+        self.message.attach("Une pièce jointe.html", '<p>\u2019</p>', mimetype='text/html')
         self.message.send()
         attachment = self.get_api_call_json()['attachments'][0]
-        self.assertEqual(attachment['filename'], u'Une pièce jointe.html')
-        self.assertEqual(b64decode(attachment['content']).decode('utf-8'), u'<p>\u2019</p>')
+        self.assertEqual(attachment['filename'], 'Une pièce jointe.html')
+        self.assertEqual(b64decode(attachment['content']).decode('utf-8'), '<p>\u2019</p>')
 
     def test_embedded_images(self):
         image_filename = SAMPLE_IMAGE_FILENAME
