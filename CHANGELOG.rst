@@ -25,6 +25,24 @@ Release history
 ^^^^^^^^^^^^^^^
     ..  This extra heading level keeps the ToC from becoming unmanageably long
 
+vNext
+-----
+
+*Unreleased changes in development*
+
+Breaking changes
+~~~~~~~~~~~~~~~~
+
+* Drop support for Django versions older than Django 2.0, and for Python 2.7.
+  (For compatibility with Django 1.11, stay on the Anymail `v7.2 LTS`_
+  extended support branch.)
+
+* Remove Anymail internal code related to supporting Python 2 and older Django
+  versions. This does not change the documented API, but may affect you if your
+  code borrowed from Anymail's undocumented internals. (You should be able to switch
+  to the Python standard library equivalents, as Anymail has done.)
+
+
 v7.2 LTS
 --------
 
