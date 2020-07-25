@@ -16,7 +16,7 @@ from .utils import AnymailTestMixin, SAMPLE_IMAGE_FILENAME, sample_image_content
 
 @tag('amazon_ses')
 @override_settings(EMAIL_BACKEND='anymail.backends.amazon_ses.EmailBackend')
-class AmazonSESBackendMockAPITestCase(SimpleTestCase, AnymailTestMixin):
+class AmazonSESBackendMockAPITestCase(AnymailTestMixin, SimpleTestCase):
     """TestCase that uses the Amazon SES EmailBackend with a mocked boto3 client"""
 
     def setUp(self):

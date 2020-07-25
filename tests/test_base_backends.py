@@ -70,7 +70,7 @@ class RequestsBackendBaseTestCase(RequestsBackendMockAPITestCase):
 
 @tag('live')
 @override_settings(EMAIL_BACKEND='tests.test_base_backends.MinimalRequestsBackend')
-class RequestsBackendLiveTestCase(SimpleTestCase, AnymailTestMixin):
+class RequestsBackendLiveTestCase(AnymailTestMixin, SimpleTestCase):
     @override_settings(ANYMAIL_DEBUG_API_REQUESTS=True)
     def test_debug_logging(self):
         message = AnymailMessage('Subject', 'Text Body', 'from@example.com', ['to@example.com'])

@@ -764,7 +764,7 @@ class PostmarkBackendSessionSharingTestCase(SessionSharingTestCasesMixin, Postma
 
 @tag('postmark')
 @override_settings(EMAIL_BACKEND="anymail.backends.postmark.EmailBackend")
-class PostmarkBackendImproperlyConfiguredTests(SimpleTestCase, AnymailTestMixin):
+class PostmarkBackendImproperlyConfiguredTests(AnymailTestMixin, SimpleTestCase):
     """Test ESP backend without required settings in place"""
 
     def test_missing_api_key(self):

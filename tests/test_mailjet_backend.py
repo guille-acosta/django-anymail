@@ -661,7 +661,7 @@ class MailjetBackendSessionSharingTestCase(SessionSharingTestCasesMixin, Mailjet
 
 @tag('mailjet')
 @override_settings(EMAIL_BACKEND="anymail.backends.mailjet.EmailBackend")
-class MailjetBackendImproperlyConfiguredTests(SimpleTestCase, AnymailTestMixin):
+class MailjetBackendImproperlyConfiguredTests(AnymailTestMixin, SimpleTestCase):
     """Test ESP backend without required settings in place"""
 
     def test_missing_api_key(self):

@@ -13,7 +13,7 @@ from .utils import AnymailTestMixin
 UNSET = object()
 
 
-class RequestsBackendMockAPITestCase(SimpleTestCase, AnymailTestMixin):
+class RequestsBackendMockAPITestCase(AnymailTestMixin, SimpleTestCase):
     """TestCase that mocks API calls through requests"""
 
     DEFAULT_RAW_RESPONSE = b"""{"subclass": "should override"}"""

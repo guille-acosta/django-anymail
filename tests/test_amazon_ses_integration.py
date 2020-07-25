@@ -39,7 +39,7 @@ AMAZON_SES_TEST_REGION_NAME = os.getenv("AMAZON_SES_TEST_REGION_NAME", "us-east-
         "AMAZON_SES_CONFIGURATION_SET_NAME": "TestConfigurationSet",  # actual config set in Anymail test account
     })
 @tag('amazon_ses', 'live')
-class AmazonSESBackendIntegrationTests(SimpleTestCase, AnymailTestMixin):
+class AmazonSESBackendIntegrationTests(AnymailTestMixin, SimpleTestCase):
     """Amazon SES API integration tests
 
     These tests run against the **live** Amazon SES API, using the environment

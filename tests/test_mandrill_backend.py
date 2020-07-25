@@ -615,7 +615,7 @@ class MandrillBackendSessionSharingTestCase(SessionSharingTestCasesMixin, Mandri
 
 @tag('mandrill')
 @override_settings(EMAIL_BACKEND="anymail.backends.mandrill.EmailBackend")
-class MandrillBackendImproperlyConfiguredTests(SimpleTestCase, AnymailTestMixin):
+class MandrillBackendImproperlyConfiguredTests(AnymailTestMixin, SimpleTestCase):
     """Test backend without required settings"""
 
     def test_missing_api_key(self):

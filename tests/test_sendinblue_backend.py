@@ -456,7 +456,7 @@ class SendinBlueBackendSessionSharingTestCase(SessionSharingTestCasesMixin, Send
 
 @tag('sendinblue')
 @override_settings(EMAIL_BACKEND="anymail.backends.sendinblue.EmailBackend")
-class SendinBlueBackendImproperlyConfiguredTests(SimpleTestCase, AnymailTestMixin):
+class SendinBlueBackendImproperlyConfiguredTests(AnymailTestMixin, SimpleTestCase):
     """Test ESP backend without required settings in place"""
 
     def test_missing_auth(self):

@@ -7,7 +7,7 @@ from anymail.checks import check_deprecated_settings, check_insecure_settings
 from .utils import AnymailTestMixin
 
 
-class DeprecatedSettingsTests(SimpleTestCase, AnymailTestMixin):
+class DeprecatedSettingsTests(AnymailTestMixin, SimpleTestCase):
     @override_settings(ANYMAIL={"WEBHOOK_AUTHORIZATION": "abcde:12345"})
     def test_webhook_authorization(self):
         errors = check_deprecated_settings(None)
@@ -27,7 +27,7 @@ class DeprecatedSettingsTests(SimpleTestCase, AnymailTestMixin):
         )])
 
 
-class InsecureSettingsTests(SimpleTestCase, AnymailTestMixin):
+class InsecureSettingsTests(AnymailTestMixin, SimpleTestCase):
     @override_settings(ANYMAIL={"DEBUG_API_REQUESTS": True})
     def test_debug_api_requests_deployed(self):
         errors = check_insecure_settings(None)

@@ -18,7 +18,7 @@ POSTMARK_TEST_TEMPLATE_ID = os.getenv('POSTMARK_TEST_TEMPLATE_ID')
 @tag('postmark', 'live')
 @override_settings(ANYMAIL_POSTMARK_SERVER_TOKEN="POSTMARK_API_TEST",
                    EMAIL_BACKEND="anymail.backends.postmark.EmailBackend")
-class PostmarkBackendIntegrationTests(SimpleTestCase, AnymailTestMixin):
+class PostmarkBackendIntegrationTests(AnymailTestMixin, SimpleTestCase):
     """Postmark API integration tests
 
     These tests run against the **live** Postmark API, but using a

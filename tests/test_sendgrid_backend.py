@@ -884,7 +884,7 @@ class SendGridBackendSessionSharingTestCase(SessionSharingTestCasesMixin, SendGr
 
 @tag('sendgrid')
 @override_settings(EMAIL_BACKEND="anymail.backends.sendgrid.EmailBackend")
-class SendGridBackendImproperlyConfiguredTests(SimpleTestCase, AnymailTestMixin):
+class SendGridBackendImproperlyConfiguredTests(AnymailTestMixin, SimpleTestCase):
     """Test ESP backend without required settings in place"""
 
     def test_missing_auth(self):
@@ -894,7 +894,7 @@ class SendGridBackendImproperlyConfiguredTests(SimpleTestCase, AnymailTestMixin)
 
 @tag('sendgrid')
 @override_settings(EMAIL_BACKEND="anymail.backends.sendgrid.EmailBackend")
-class SendGridBackendDisallowsV2Tests(SimpleTestCase, AnymailTestMixin):
+class SendGridBackendDisallowsV2Tests(AnymailTestMixin, SimpleTestCase):
     """Using v2-API-only features should cause errors with v3 backend"""
 
     @override_settings(ANYMAIL={'SENDGRID_USERNAME': 'sg_username', 'SENDGRID_PASSWORD': 'sg_password'})

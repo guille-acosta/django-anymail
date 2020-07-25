@@ -19,7 +19,7 @@ MAILJET_TEST_SECRET_KEY = os.getenv('MAILJET_TEST_SECRET_KEY')
 @override_settings(ANYMAIL_MAILJET_API_KEY=MAILJET_TEST_API_KEY,
                    ANYMAIL_MAILJET_SECRET_KEY=MAILJET_TEST_SECRET_KEY,
                    EMAIL_BACKEND="anymail.backends.mailjet.EmailBackend")
-class MailjetBackendIntegrationTests(SimpleTestCase, AnymailTestMixin):
+class MailjetBackendIntegrationTests(AnymailTestMixin, SimpleTestCase):
     """Mailjet API integration tests
 
     These tests run against the **live** Mailjet API, using the

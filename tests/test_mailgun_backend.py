@@ -772,7 +772,7 @@ class MailgunBackendSessionSharingTestCase(SessionSharingTestCasesMixin, Mailgun
 
 @tag('mailgun')
 @override_settings(EMAIL_BACKEND="anymail.backends.mailgun.EmailBackend")
-class MailgunBackendImproperlyConfiguredTests(SimpleTestCase, AnymailTestMixin):
+class MailgunBackendImproperlyConfiguredTests(AnymailTestMixin, SimpleTestCase):
     """Test ESP backend without required settings in place"""
 
     def test_missing_api_key(self):

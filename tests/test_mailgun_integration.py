@@ -24,7 +24,7 @@ MAILGUN_TEST_DOMAIN = os.getenv('MAILGUN_TEST_DOMAIN')
                             'MAILGUN_SENDER_DOMAIN': MAILGUN_TEST_DOMAIN,
                             'MAILGUN_SEND_DEFAULTS': {'esp_extra': {'o:testmode': 'yes'}}},
                    EMAIL_BACKEND="anymail.backends.mailgun.EmailBackend")
-class MailgunBackendIntegrationTests(SimpleTestCase, AnymailTestMixin):
+class MailgunBackendIntegrationTests(AnymailTestMixin, SimpleTestCase):
     """Mailgun API integration tests
 
     These tests run against the **live** Mailgun API, using the

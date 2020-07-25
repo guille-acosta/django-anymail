@@ -20,7 +20,7 @@ from .utils import AnymailTestMixin, decode_att, SAMPLE_IMAGE_FILENAME, sample_i
 @tag('sparkpost')
 @override_settings(EMAIL_BACKEND='anymail.backends.sparkpost.EmailBackend',
                    ANYMAIL={'SPARKPOST_API_KEY': 'test_api_key'})
-class SparkPostBackendMockAPITestCase(SimpleTestCase, AnymailTestMixin):
+class SparkPostBackendMockAPITestCase(AnymailTestMixin, SimpleTestCase):
     """TestCase that uses SparkPostEmailBackend with a mocked transmissions.send API"""
 
     def setUp(self):
@@ -607,7 +607,7 @@ class SparkPostBackendRecipientsRefusedTests(SparkPostBackendMockAPITestCase):
 
 @tag('sparkpost')
 @override_settings(EMAIL_BACKEND="anymail.backends.sparkpost.EmailBackend")
-class SparkPostBackendConfigurationTests(SimpleTestCase, AnymailTestMixin):
+class SparkPostBackendConfigurationTests(AnymailTestMixin, SimpleTestCase):
     """Test various SparkPost client options"""
 
     def test_missing_api_key(self):

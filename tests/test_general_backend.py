@@ -33,7 +33,7 @@ class SettingsTestBackend(TestBackend):
 
 
 @override_settings(EMAIL_BACKEND='anymail.backends.test.EmailBackend')
-class TestBackendTestCase(SimpleTestCase, AnymailTestMixin):
+class TestBackendTestCase(AnymailTestMixin, SimpleTestCase):
     """Base TestCase using Anymail's Test EmailBackend"""
 
     def setUp(self):
