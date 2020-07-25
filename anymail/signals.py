@@ -2,16 +2,20 @@ from django.dispatch import Signal
 
 
 # Outbound message, before sending
-pre_send = Signal(providing_args=['message', 'esp_name'])
+# provides args: message, esp_name
+pre_send = Signal()
 
 # Outbound message, after sending
-post_send = Signal(providing_args=['message', 'status', 'esp_name'])
+# provides args: message, status, esp_name
+post_send = Signal()
 
 # Delivery and tracking events for sent messages
-tracking = Signal(providing_args=['event', 'esp_name'])
+# provides args: event, esp_name
+tracking = Signal()
 
 # Event for receiving inbound messages
-inbound = Signal(providing_args=['event', 'esp_name'])
+# provides args: event, esp_name
+inbound = Signal()
 
 
 class AnymailEvent(object):
