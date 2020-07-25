@@ -1,12 +1,13 @@
 import json
 from datetime import datetime
+from email.parser import BytesParser
+from email.policy import default as default_policy
 
 from django.utils.timezone import utc
 
 from .base import AnymailBaseWebhookView
-from .._email_compat import EmailBytesParser
 from ..inbound import AnymailInboundMessage
-from ..signals import inbound, tracking, AnymailInboundEvent, AnymailTrackingEvent, EventType, RejectReason
+from ..signals import AnymailInboundEvent, AnymailTrackingEvent, EventType, RejectReason, inbound, tracking
 
 
 class SendGridTrackingWebhookView(AnymailBaseWebhookView):
@@ -204,7 +205,7 @@ class SendGridInboundWebhookView(AnymailBaseWebhookView):
                 b"\r\n\r\n",
                 request.body
             ])
-            parsed_parts = EmailBytesParser().parsebytes(raw_data).get_payload()
+            parsed_parts = BytesParser(policy=default_policy).parsebytes(raw_data).get_payload()
             for part in parsed_parts:
                 name = part.get_param('name', header='content-disposition')
                 if name == 'text':

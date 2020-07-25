@@ -1,11 +1,12 @@
 from base64 import b64decode
 from email.message import Message
+from email.parser import BytesParser, Parser
+from email.policy import default as default_policy
 from email.utils import unquote
 
 import six
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from ._email_compat import EmailParser, EmailBytesParser
 from .utils import angle_wrap, get_content_disposition, parse_address_list, parse_rfc2822date
 
 
@@ -203,20 +204,20 @@ class AnymailInboundMessage(Message, object):  # `object` ensures new-style clas
             # Avoid Python 3.x issue https://bugs.python.org/issue18271
             # (See test_inbound: test_parse_raw_mime_8bit_utf8)
             return cls.parse_raw_mime_bytes(s.encode('utf-8'))
-        return EmailParser(cls).parsestr(s)
+        return Parser(cls, policy=default_policy).parsestr(s)
 
     @classmethod
     def parse_raw_mime_bytes(cls, b):
         """Returns a new AnymailInboundMessage parsed from bytes b"""
-        return EmailBytesParser(cls).parsebytes(b)
+        return BytesParser(cls, policy=default_policy).parsebytes(b)
 
     @classmethod
     def parse_raw_mime_file(cls, fp):
         """Returns a new AnymailInboundMessage parsed from file-like object fp"""
         if isinstance(fp.read(0), six.binary_type):
-            return EmailBytesParser(cls).parse(fp)
+            return BytesParser(cls, policy=default_policy).parse(fp)
         else:
-            return EmailParser(cls).parse(fp)
+            return Parser(cls, policy=default_policy).parse(fp)
 
     @classmethod
     def construct(cls, raw_headers=None, from_email=None, to=None, cc=None, subject=None, headers=None,
@@ -242,7 +243,7 @@ class AnymailInboundMessage(Message, object):  # `object` ensures new-style clas
         :return: {AnymailInboundMessage}
         """
         if raw_headers is not None:
-            msg = EmailParser(cls).parsestr(raw_headers, headersonly=True)
+            msg = Parser(cls, policy=default_policy).parsestr(raw_headers, headersonly=True)
             msg.set_payload(None)  # headersonly forces an empty string payload, which breaks things later
         else:
             msg = cls()
