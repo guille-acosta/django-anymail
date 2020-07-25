@@ -6,7 +6,7 @@ from email.utils import unquote
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from .utils import angle_wrap, get_content_disposition, parse_address_list, parse_rfc2822date
+from .utils import angle_wrap, parse_address_list, parse_rfc2822date
 
 
 class AnymailInboundMessage(Message, object):  # `object` ensures new-style class in Python 2)
@@ -125,14 +125,7 @@ class AnymailInboundMessage(Message, object):  # `object` ensures new-style clas
                 return part.get_content_text()
         return None
 
-    # Backport from Python 3.5 email.message.Message
-    def get_content_disposition(self):
-        try:
-            return super(AnymailInboundMessage, self).get_content_disposition()
-        except AttributeError:
-            return get_content_disposition(self)
-
-    # Backport from Python 3.4.2 email.message.MIMEPart
+    # Hoisted from email.message.MIMEPart
     def is_attachment(self):
         return self.get_content_disposition() == 'attachment'
 

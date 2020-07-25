@@ -4,7 +4,7 @@ from base64 import b64encode
 from collections.abc import Mapping, MutableMapping
 from datetime import datetime
 from email.mime.base import MIMEBase
-from email.utils import formatdate, getaddresses, unquote
+from email.utils import formatdate, getaddresses, parsedate_to_datetime, unquote
 from time import mktime
 from urllib.parse import urlsplit, urlunsplit
 
@@ -12,7 +12,7 @@ from django.conf import settings
 from django.core.mail.message import DEFAULT_ATTACHMENT_MIME_TYPE, sanitize_address
 from django.utils.encoding import force_str
 from django.utils.functional import Promise
-from django.utils.timezone import get_fixed_timezone, utc
+from django.utils.timezone import utc
 from requests.structures import CaseInsensitiveDict
 
 from .exceptions import AnymailConfigurationError, AnymailInvalidAddress
@@ -286,7 +286,7 @@ class Attachment(object):
                     self.content = attachment.as_string().encode(self.encoding)
             self.mimetype = attachment.get_content_type()
 
-            content_disposition = get_content_disposition(attachment)
+            content_disposition = attachment.get_content_disposition()
             if content_disposition == 'inline' or (not content_disposition and 'Content-ID' in attachment):
                 self.inline = True
                 self.content_id = attachment["Content-ID"]  # probably including the <...>
@@ -312,18 +312,6 @@ class Attachment(object):
         if isinstance(content, str):
             content = content.encode(self.encoding)
         return b64encode(content).decode("ascii")
-
-
-def get_content_disposition(mimeobj):
-    """Return the message's content-disposition if it exists, or None.
-
-    Backport of py3.5 :func:`~email.message.Message.get_content_disposition`
-    """
-    value = mimeobj.get('content-disposition')
-    if value is None:
-        return None
-    # _splitparam(value)[0].lower() :
-    return str(value).partition(';')[0].strip().lower()
 
 
 def get_anymail_setting(name, default=UNSET, esp_name=None, kwargs=None, allow_bare=False):
@@ -529,27 +517,6 @@ def get_request_uri(request):
         url = urlunsplit((parts.scheme, basic_auth + '@' + parts.netloc,
                           parts.path, parts.query, parts.fragment))
     return url
-
-
-try:
-    from email.utils import parsedate_to_datetime  # Python 3.3+
-except ImportError:
-    from email.utils import parsedate_tz
-
-    # Backport Python 3.3+ email.utils.parsedate_to_datetime
-    def parsedate_to_datetime(s):
-        # *dtuple, tz = _parsedate_tz(data)
-        dtuple = parsedate_tz(s)
-        tz = dtuple[-1]
-        # if tz is None:  # parsedate_tz returns 0 for "-0000"
-        if tz is None or (tz == 0 and "-0000" in s):
-            # "... indicates that the date-time contains no information
-            # about the local time zone" (RFC 2822 #3.3)
-            return datetime(*dtuple[:6])
-        else:
-            # tzinfo = datetime.timezone(datetime.timedelta(seconds=tz))  # Python 3.2+ only
-            tzinfo = get_fixed_timezone(tz // 60)  # don't use timedelta (avoid Django bug #28739)
-            return datetime(*dtuple[:6], tzinfo=tzinfo)
 
 
 def parse_rfc2822date(s):

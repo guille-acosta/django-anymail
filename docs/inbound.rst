@@ -290,8 +290,6 @@ Handling Inbound Attachments
 
 Anymail converts each inbound attachment to a specialized MIME object with
 additional methods for handling attachments and integrating with Django.
-It also backports some helpful MIME methods from newer versions of Python
-to all versions supported by Anymail.
 
 The attachment objects in an AnymailInboundMessage's
 :attr:`~AnymailInboundMessage.attachments` list and
@@ -346,8 +344,6 @@ have these methods:
     .. method:: is_attachment()
 
         Returns `True` for a (non-inline) attachment, `False` otherwise.
-        (Anymail back-ports Python 3.4.2's :meth:`~email.message.EmailMessage.is_attachment` method
-        to all supported versions.)
 
     .. method:: is_inline_attachment()
 
@@ -359,9 +355,6 @@ have these methods:
         Returns the lowercased value (without parameters) of the attachment's
         :mailheader:`Content-Disposition` header. The return value should be either "inline"
         or "attachment", or `None` if the attachment is somehow missing that header.
-
-        (Anymail back-ports Python 3.5's :meth:`~email.message.Message.get_content_disposition`
-        method to all supported versions.)
 
     .. method:: get_content_text(charset=None, errors='replace')
 
