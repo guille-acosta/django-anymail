@@ -1,16 +1,16 @@
-import os
 import logging
+import os
 import unittest
 from datetime import datetime, timedelta
-from time import mktime, sleep
+from time import sleep
 
 import requests
 from django.test import SimpleTestCase, override_settings, tag
 
 from anymail.exceptions import AnymailAPIError
 from anymail.message import AnymailMessage
-
 from .utils import AnymailTestMixin, sample_image_path
+
 
 MAILGUN_TEST_API_KEY = os.getenv('MAILGUN_TEST_API_KEY')
 MAILGUN_TEST_DOMAIN = os.getenv('MAILGUN_TEST_DOMAIN')
@@ -97,7 +97,7 @@ class MailgunBackendIntegrationTests(AnymailTestMixin, SimpleTestCase):
 
     def test_all_options(self):
         send_at = datetime.now().replace(microsecond=0) + timedelta(minutes=2)
-        send_at_timestamp = mktime(send_at.timetuple())  # python3: send_at.timestamp()
+        send_at_timestamp = send_at.timestamp()
         message = AnymailMessage(
             subject="Anymail Mailgun all-options integration test",
             body="This is the text body",

@@ -2,17 +2,14 @@ import base64
 import mimetypes
 from base64 import b64encode
 from collections.abc import Mapping, MutableMapping
-from datetime import datetime
 from email.mime.base import MIMEBase
 from email.utils import formatdate, getaddresses, parsedate_to_datetime, unquote
-from time import mktime
 from urllib.parse import urlsplit, urlunsplit
 
 from django.conf import settings
 from django.core.mail.message import DEFAULT_ATTACHMENT_MIME_TYPE, sanitize_address
 from django.utils.encoding import force_str
 from django.utils.functional import Promise
-from django.utils.timezone import utc
 from requests.structures import CaseInsensitiveDict
 
 from .exceptions import AnymailConfigurationError, AnymailInvalidAddress
@@ -420,26 +417,11 @@ def querydict_getfirst(qdict, field, default=UNSET):
         return qdict[field]  # raise appropriate KeyError
 
 
-EPOCH = datetime(1970, 1, 1, tzinfo=utc)
-
-
-def timestamp(dt):
-    """Return the unix timestamp (seconds past the epoch) for datetime dt"""
-    # This is the equivalent of Python 3.3's datetime.timestamp
-    try:
-        return dt.timestamp()
-    except AttributeError:
-        if dt.tzinfo is None:
-            return mktime(dt.timetuple())
-        else:
-            return (dt - EPOCH).total_seconds()
-
-
 def rfc2822date(dt):
     """Turn a datetime into a date string as specified in RFC 2822."""
-    # This is almost the equivalent of Python 3.3's email.utils.format_datetime,
+    # This is almost the equivalent of Python's email.utils.format_datetime,
     # but treats naive datetimes as local rather than "UTC with no information ..."
-    timeval = timestamp(dt)
+    timeval = dt.timestamp()
     return formatdate(timeval, usegmt=True)
 
 

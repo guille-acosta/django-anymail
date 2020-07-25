@@ -7,7 +7,7 @@ from requests.structures import CaseInsensitiveDict
 from .base_requests import AnymailRequestsBackend, RequestsPayload
 from ..exceptions import AnymailConfigurationError, AnymailRequestsAPIError, AnymailWarning
 from ..message import AnymailRecipientStatus
-from ..utils import BASIC_NUMERIC_TYPES, Mapping, get_anymail_setting, timestamp, update_deep
+from ..utils import BASIC_NUMERIC_TYPES, Mapping, get_anymail_setting, update_deep
 
 
 class EmailBackend(AnymailRequestsBackend):
@@ -294,7 +294,7 @@ class SendGridPayload(RequestsPayload):
     def set_send_at(self, send_at):
         # Backend has converted pretty much everything to
         # a datetime by here; SendGrid expects unix timestamp
-        self.data["send_at"] = int(timestamp(send_at))  # strip microseconds
+        self.data["send_at"] = int(send_at.timestamp())  # strip microseconds
 
     def set_tags(self, tags):
         self.data["categories"] = tags
