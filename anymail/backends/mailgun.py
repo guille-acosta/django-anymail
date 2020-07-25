@@ -1,14 +1,13 @@
 from datetime import datetime
 from email.utils import encode_rfc2231
-from six.moves.urllib.parse import quote
+from urllib.parse import quote
 
 from requests import Request
 
-from ..exceptions import AnymailRequestsAPIError, AnymailError
+from .base_requests import AnymailRequestsBackend, RequestsPayload
+from ..exceptions import AnymailError, AnymailRequestsAPIError
 from ..message import AnymailRecipientStatus
 from ..utils import get_anymail_setting, rfc2822date
-
-from .base_requests import AnymailRequestsBackend, RequestsPayload
 
 
 # Feature-detect whether requests (urllib3) correctly uses RFC 7578 encoding for non-

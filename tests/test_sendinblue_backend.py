@@ -5,7 +5,6 @@ from decimal import Decimal
 from email.mime.base import MIMEBase
 from email.mime.image import MIMEImage
 
-import six
 from django.core import mail
 from django.test import SimpleTestCase, override_settings, tag
 from django.utils.timezone import get_fixed_timezone, override as override_current_timezone
@@ -15,9 +14,6 @@ from anymail.exceptions import (AnymailAPIError, AnymailConfigurationError, Anym
 from anymail.message import attach_inline_image_file
 from .mock_requests_backend import RequestsBackendMockAPITestCase, SessionSharingTestCasesMixin
 from .utils import sample_image_content, sample_image_path, SAMPLE_IMAGE_FILENAME, AnymailTestMixin
-
-# noinspection PyUnresolvedReferences
-longtype = int if six.PY3 else long  # NOQA: F821
 
 
 @tag('sendinblue')
@@ -117,13 +113,12 @@ class SendinBlueBackendStandardEmailTests(SendinBlueBackendMockAPITestCase):
         self.assertNotIn('textContent', data)
 
     def test_extra_headers(self):
-        self.message.extra_headers = {'X-Custom': 'string', 'X-Num': 123, 'X-Long': longtype(123),
+        self.message.extra_headers = {'X-Custom': 'string', 'X-Num': 123,
                                       'Reply-To': '"Do Not Reply" <noreply@example.com>'}
         self.message.send()
         data = self.get_api_call_json()
         self.assertEqual(data['headers']['X-Custom'], 'string')
         self.assertEqual(data['headers']['X-Num'], 123)
-        self.assertEqual(data['headers']['X-Long'], 123)
         # Reply-To must be moved to separate param
         self.assertNotIn('Reply-To', data['headers'])
         self.assertEqual(data['replyTo'], {'name': "Do Not Reply", 'email': "noreply@example.com"})
@@ -282,7 +277,7 @@ class SendinBlueBackendAnymailFeatureTests(SendinBlueBackendMockAPITestCase):
             self.message.send()
 
     def test_metadata(self):
-        self.message.metadata = {'user_id': "12345", 'items': 6, 'float': 98.6, 'long': longtype(123)}
+        self.message.metadata = {'user_id': "12345", 'items': 6, 'float': 98.6}
         self.message.send()
 
         data = self.get_api_call_json()
@@ -291,7 +286,6 @@ class SendinBlueBackendAnymailFeatureTests(SendinBlueBackendMockAPITestCase):
         self.assertEqual(metadata['user_id'], "12345")
         self.assertEqual(metadata['items'], 6)
         self.assertEqual(metadata['float'], 98.6)
-        self.assertEqual(metadata['long'], longtype(123))
 
     def test_send_at(self):
         utc_plus_6 = get_fixed_timezone(6 * 60)

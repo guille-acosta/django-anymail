@@ -1,7 +1,6 @@
 import json
 from traceback import format_exception_only
 
-import six
 from django.core.exceptions import ImproperlyConfigured, SuspiciousOperation
 from requests import HTTPError
 
@@ -40,7 +39,7 @@ class AnymailError(Exception):
 
     def __str__(self):
         parts = [
-            " ".join([six.text_type(arg) for arg in self.args]),
+            " ".join([str(arg) for arg in self.args]),
             self.describe_raised_from(),
             self.describe_send(),
             self.describe_response(),
@@ -69,7 +68,7 @@ class AnymailError(Exception):
 
         # Decode response.reason to text -- borrowed from requests.Response.raise_for_status:
         reason = self.response.reason
-        if isinstance(reason, six.binary_type):
+        if isinstance(reason, bytes):
             try:
                 reason = reason.decode('utf-8')
             except UnicodeDecodeError:

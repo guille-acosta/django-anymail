@@ -6,20 +6,18 @@ from datetime import datetime
 from email.mime.base import MIMEBase
 from email.utils import formatdate, getaddresses, unquote
 from time import mktime
+from urllib.parse import urlsplit, urlunsplit
 
-import six
 from django.conf import settings
 from django.core.mail.message import DEFAULT_ATTACHMENT_MIME_TYPE, sanitize_address
 from django.utils.encoding import force_str
 from django.utils.functional import Promise
 from django.utils.timezone import get_fixed_timezone, utc
 from requests.structures import CaseInsensitiveDict
-from six.moves.urllib.parse import urlsplit, urlunsplit
 
 from .exceptions import AnymailConfigurationError, AnymailInvalidAddress
 
-
-BASIC_NUMERIC_TYPES = six.integer_types + (float,)  # int, float, and (on Python 2) long
+BASIC_NUMERIC_TYPES = (int, float)
 
 
 UNSET = type('UNSET', (object,), {})  # Used as non-None default value
@@ -133,7 +131,7 @@ def parse_address_list(address_list, field=None):
     :return list[:class:`EmailAddress`]:
     :raises :exc:`AnymailInvalidAddress`:
     """
-    if isinstance(address_list, six.string_types) or is_lazy(address_list):
+    if isinstance(address_list, str) or is_lazy(address_list):
         address_list = [address_list]
 
     if address_list is None or address_list == [None]:
@@ -311,7 +309,7 @@ class Attachment(object):
     def b64content(self):
         """Content encoded as a base64 ascii string"""
         content = self.content
-        if isinstance(content, six.text_type):
+        if isinstance(content, str):
             content = content.encode(self.encoding)
         return b64encode(content).decode("ascii")
 
@@ -472,7 +470,7 @@ def angle_wrap(s):
 def is_lazy(obj):
     """Return True if obj is a Django lazy object."""
     # See django.utils.functional.lazy. (This appears to be preferred
-    # to checking for `not isinstance(obj, six.text_type)`.)
+    # to checking for `not isinstance(obj, str)`.)
     return isinstance(obj, Promise)
 
 
@@ -482,7 +480,7 @@ def force_non_lazy(obj):
     (Similar to django.utils.encoding.force_text, but doesn't alter non-text objects.)
     """
     if is_lazy(obj):
-        return six.text_type(obj)
+        return str(obj)
 
     return obj
 

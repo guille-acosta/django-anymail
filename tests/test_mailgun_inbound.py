@@ -1,8 +1,8 @@
 import json
 from datetime import datetime
+from io import BytesIO
 from textwrap import dedent
 
-import six
 from django.test import override_settings, tag
 from django.utils.timezone import utc
 from mock import ANY
@@ -97,13 +97,13 @@ class MailgunInboundTestCase(WebhookTestCase):
         ])
 
     def test_attachments(self):
-        att1 = six.BytesIO('test attachment'.encode('utf-8'))
+        att1 = BytesIO('test attachment'.encode('utf-8'))
         att1.name = 'test.txt'
         image_content = sample_image_content()
-        att2 = six.BytesIO(image_content)
+        att2 = BytesIO(image_content)
         att2.name = 'image.png'
         email_content = sample_email_content()
-        att3 = six.BytesIO(email_content)
+        att3 = BytesIO(email_content)
         att3.content_type = 'message/rfc822; charset="us-ascii"'
         raw_event = mailgun_sign_legacy_payload({
             'message-headers': '[]',

@@ -4,7 +4,6 @@ from email.parser import BytesParser, Parser
 from email.policy import default as default_policy
 from email.utils import unquote
 
-import six
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from .utils import angle_wrap, get_content_disposition, parse_address_list, parse_rfc2822date
@@ -200,7 +199,7 @@ class AnymailInboundMessage(Message, object):  # `object` ensures new-style clas
     @classmethod
     def parse_raw_mime(cls, s):
         """Returns a new AnymailInboundMessage parsed from str s"""
-        if isinstance(s, six.text_type):
+        if isinstance(s, str):
             # Avoid Python 3.x issue https://bugs.python.org/issue18271
             # (See test_inbound: test_parse_raw_mime_8bit_utf8)
             return cls.parse_raw_mime_bytes(s.encode('utf-8'))
@@ -214,7 +213,7 @@ class AnymailInboundMessage(Message, object):  # `object` ensures new-style clas
     @classmethod
     def parse_raw_mime_file(cls, fp):
         """Returns a new AnymailInboundMessage parsed from file-like object fp"""
-        if isinstance(fp.read(0), six.binary_type):
+        if isinstance(fp.read(0), bytes):
             return BytesParser(cls, policy=default_policy).parse(fp)
         else:
             return Parser(cls, policy=default_policy).parse(fp)
@@ -337,7 +336,7 @@ class AnymailInboundMessage(Message, object):  # `object` ensures new-style clas
         if part.get_content_maintype() == 'message':
             # email.Message parses message/rfc822 parts as a "multipart" (list) payload
             # whose single item is the recursively-parsed message attachment
-            if isinstance(content, six.binary_type):
+            if isinstance(content, bytes):
                 content = content.decode()
             payload = [cls.parse_raw_mime(content)]
             charset = None

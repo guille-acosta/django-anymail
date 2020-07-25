@@ -1,12 +1,10 @@
 from email.header import Header
-
-from six.moves.urllib.parse import quote
-
-from ..exceptions import AnymailRequestsAPIError
-from ..message import AnymailRecipientStatus, ANYMAIL_STATUSES
-from ..utils import get_anymail_setting, EmailAddress, parse_address_list
+from urllib.parse import quote
 
 from .base_requests import AnymailRequestsBackend, RequestsPayload
+from ..exceptions import AnymailRequestsAPIError
+from ..message import ANYMAIL_STATUSES, AnymailRecipientStatus
+from ..utils import EmailAddress, get_anymail_setting, parse_address_list
 
 
 class EmailBackend(AnymailRequestsBackend):

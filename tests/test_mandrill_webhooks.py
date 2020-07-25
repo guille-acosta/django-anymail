@@ -1,10 +1,10 @@
-import json
-from datetime import datetime
-from six.moves.urllib.parse import urljoin
-
 import hashlib
 import hmac
+import json
 from base64 import b64encode
+from datetime import datetime
+from urllib.parse import urljoin
+
 from django.core.exceptions import ImproperlyConfigured
 from django.test import override_settings, tag
 from django.utils.timezone import utc
@@ -12,8 +12,7 @@ from mock import ANY
 
 from anymail.signals import AnymailTrackingEvent
 from anymail.webhooks.mandrill import MandrillCombinedWebhookView, MandrillTrackingWebhookView
-
-from .webhook_cases import WebhookTestCase, WebhookBasicAuthTestsMixin
+from .webhook_cases import WebhookBasicAuthTestsMixin, WebhookTestCase
 
 TEST_WEBHOOK_KEY = 'TEST_WEBHOOK_KEY'
 

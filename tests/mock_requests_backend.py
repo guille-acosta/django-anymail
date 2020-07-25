@@ -1,9 +1,9 @@
 import json
+from io import BytesIO
 
 from django.core import mail
 from django.test import SimpleTestCase
 import requests
-import six
 from mock import patch
 
 from anymail.exceptions import AnymailAPIError
@@ -26,8 +26,7 @@ class RequestsBackendMockAPITestCase(AnymailTestMixin, SimpleTestCase):
             self.status_code = status_code
             self.encoding = encoding
             self.reason = reason or ("OK" if 200 <= status_code < 300 else "ERROR")
-            # six.BytesIO(None) returns b'None' in PY2 (rather than b'')
-            self.raw = six.BytesIO(raw) if raw is not None else six.BytesIO()
+            self.raw = BytesIO(raw)
 
     def setUp(self):
         super(RequestsBackendMockAPITestCase, self).setUp()

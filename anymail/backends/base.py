@@ -1,7 +1,6 @@
 import json
 from datetime import date, datetime
 
-import six
 from django.conf import settings
 from django.core.mail.backends.base import BaseEmailBackend
 from django.utils.timezone import is_naive, get_current_timezone, make_aware, utc
@@ -365,7 +364,7 @@ class BasePayload(object):
         #   TypeError: must be str, not list
         #   TypeError: can only concatenate list (not "str") to list
         #   TypeError: Can't convert 'list' object to str implicitly
-        if isinstance(value, six.string_types) or is_lazy(value):
+        if isinstance(value, str) or is_lazy(value):
             raise TypeError('"{attr}" attribute must be a list or other iterable'.format(attr=attr))
 
     #

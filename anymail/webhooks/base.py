@@ -1,6 +1,5 @@
 import warnings
 
-import six
 from django.http import HttpResponse
 from django.utils.crypto import constant_time_compare
 from django.utils.decorators import method_decorator
@@ -28,7 +27,7 @@ class AnymailBasicAuthMixin(object):
                                               kwargs=kwargs)  # no esp_name -- auth is shared between ESPs
 
         # Allow a single string:
-        if isinstance(self.basic_auth, six.string_types):
+        if isinstance(self.basic_auth, str):
             self.basic_auth = [self.basic_auth]
         if self.warn_if_no_basic_auth and len(self.basic_auth) < 1:
             warnings.warn(

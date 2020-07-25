@@ -10,7 +10,6 @@ name = "pypi"
 boto3 = "*"
 django = "*"
 requests = "*"
-six = "*"
 sparkpost = "*"
 
 [dev-packages]

@@ -1,11 +1,11 @@
+from urllib.parse import urljoin
+
 import requests
-import six
-from six.moves.urllib.parse import urljoin
 
 from anymail.utils import get_anymail_setting
 from .base import AnymailBaseBackend, BasePayload
-from ..exceptions import AnymailRequestsAPIError
 from .._version import __version__
+from ..exceptions import AnymailRequestsAPIError
 
 
 class AnymailRequestsBackend(AnymailBaseBackend):
@@ -118,7 +118,7 @@ class AnymailRequestsBackend(AnymailBaseBackend):
                             for (header, value) in request.headers.items()),
         ))
         if request.body is not None:
-            body_text = (request.body if isinstance(request.body, six.text_type)
+            body_text = (request.body if isinstance(request.body, str)
                          else request.body.decode("utf-8", errors="replace")
                          ).replace("\r\n", "\n")
             print(body_text)

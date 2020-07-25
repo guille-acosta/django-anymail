@@ -1,7 +1,6 @@
 from datetime import datetime
 from email.mime.text import MIMEText
 
-import six
 from django.core import mail
 from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import get_connection, send_mail
@@ -251,7 +250,7 @@ class LazyStringsTest(TestBackendTestCase):
 
     def assertNotLazy(self, s, msg=None):
         self.assertNotIsInstance(s, Promise,
-                                 msg=msg or "String %r is lazy" % six.text_type(s))
+                                 msg=msg or "String %r is lazy" % str(s))
 
     def test_lazy_from(self):
         # This sometimes ends up lazy when settings.DEFAULT_FROM_EMAIL is meant to be localized

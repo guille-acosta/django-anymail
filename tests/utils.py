@@ -6,11 +6,10 @@ import uuid
 import warnings
 from base64 import b64decode
 from contextlib import contextmanager
+from io import StringIO
 from unittest import TestCase
 
-import six
 from django.test import Client
-from six.moves import StringIO
 
 
 def decode_att(att):
@@ -93,7 +92,7 @@ class AnymailTestMixin(TestCase):
         # versions handled folding slightly differently.
         # (Technically, this is unfolding both headers and (incorrectly) bodies,
         # but that doesn't really affect the tests.)
-        if isinstance(first, six.binary_type) and isinstance(second, six.binary_type):
+        if isinstance(first, bytes) and isinstance(second, bytes):
             first = first.decode('utf-8')
             second = second.decode('utf-8')
         first = rfc822_unfold(first)

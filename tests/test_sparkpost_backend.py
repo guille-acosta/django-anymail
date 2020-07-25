@@ -1,20 +1,20 @@
-from datetime import datetime, date
+import os
+from datetime import date, datetime
 from email.mime.base import MIMEBase
 from email.mime.image import MIMEImage
-import os
+from io import BytesIO
 
 import requests
-import six
 from django.core import mail
 from django.test import SimpleTestCase, override_settings, tag
 from django.utils.timezone import get_fixed_timezone, override as override_current_timezone, utc
 from mock import patch
 
-from anymail.exceptions import (AnymailAPIError, AnymailUnsupportedFeature, AnymailRecipientsRefused,
-                                AnymailConfigurationError, AnymailInvalidAddress)
+from anymail.exceptions import (
+    AnymailAPIError, AnymailConfigurationError, AnymailInvalidAddress, AnymailRecipientsRefused,
+    AnymailUnsupportedFeature)
 from anymail.message import attach_inline_image_file
-
-from .utils import AnymailTestMixin, decode_att, SAMPLE_IMAGE_FILENAME, sample_image_path, sample_image_content
+from .utils import AnymailTestMixin, SAMPLE_IMAGE_FILENAME, decode_att, sample_image_content, sample_image_path
 
 
 @tag('sparkpost')
@@ -50,7 +50,7 @@ class SparkPostBackendMockAPITestCase(AnymailTestMixin, SimpleTestCase):
         response = requests.Response()
         response.status_code = status_code
         response.encoding = encoding
-        response.raw = six.BytesIO(raw)
+        response.raw = BytesIO(raw)
         response.url = "/mock/send"
         self.mock_send.side_effect = SparkPostAPIException(response)
 

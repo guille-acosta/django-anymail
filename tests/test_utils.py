@@ -5,7 +5,6 @@ import copy
 import pickle
 from email.mime.image import MIMEImage
 
-import six
 from django.http import QueryDict
 from django.test import SimpleTestCase, RequestFactory, override_settings
 from django.utils.text import format_lazy
@@ -132,7 +131,7 @@ class ParseAddressListTests(SimpleTestCase):
         # (assertRaisesMessage can't handle unicode in Python 2)
         with self.assertRaises(AnymailInvalidAddress) as cm:
             parse_address_list(["\N{ENVELOPE}"])
-        self.assertIn("Invalid email address '\N{ENVELOPE}'", six.text_type(cm.exception))
+        self.assertIn("Invalid email address '\N{ENVELOPE}'", str(cm.exception))
 
     def test_single_string(self):
         # bare strings are used by the from_email parsing in BasePayload
@@ -224,7 +223,7 @@ class LazyCoercionTests(SimpleTestCase):
 
     def test_force_lazy(self):
         result = force_non_lazy(gettext_lazy("text"))
-        self.assertIsInstance(result, six.text_type)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, "text")
 
     def test_format_lazy(self):
@@ -232,17 +231,17 @@ class LazyCoercionTests(SimpleTestCase):
                                             gettext_lazy("concatenation"), gettext_lazy("is lazy"))))
         result = force_non_lazy(format_lazy("{first}/{second}",
                                             first=gettext_lazy("text"), second=gettext_lazy("format")))
-        self.assertIsInstance(result, six.text_type)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, "text/format")
 
     def test_force_string(self):
         result = force_non_lazy("text")
-        self.assertIsInstance(result, six.text_type)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, "text")
 
     def test_force_bytes(self):
         result = force_non_lazy(b"bytes \xFE")
-        self.assertIsInstance(result, six.binary_type)
+        self.assertIsInstance(result, bytes)
         self.assertEqual(result, b"bytes \xFE")
 
     def test_force_none(self):
@@ -253,13 +252,13 @@ class LazyCoercionTests(SimpleTestCase):
         result = force_non_lazy_dict({'a': 1, 'b': gettext_lazy("b"),
                                       'c': {'c1': gettext_lazy("c1")}})
         self.assertEqual(result, {'a': 1, 'b': "b", 'c': {'c1': "c1"}})
-        self.assertIsInstance(result['b'], six.text_type)
-        self.assertIsInstance(result['c']['c1'], six.text_type)
+        self.assertIsInstance(result['b'], str)
+        self.assertIsInstance(result['c']['c1'], str)
 
     def test_force_list(self):
         result = force_non_lazy_list([0, gettext_lazy("b"), "c"])
         self.assertEqual(result, [0, "b", "c"])  # coerced to list
-        self.assertIsInstance(result[1], six.text_type)
+        self.assertIsInstance(result[1], str)
 
 
 class UpdateDeepTests(SimpleTestCase):

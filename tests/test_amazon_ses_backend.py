@@ -2,7 +2,6 @@ import json
 from datetime import datetime
 from email.mime.application import MIMEApplication
 
-import six
 from django.core import mail
 from django.core.mail import BadHeaderError
 from django.test import SimpleTestCase, override_settings, tag
@@ -119,7 +118,7 @@ class AmazonSESBackendStandardEmailTests(AmazonSESBackendMockAPITestCase):
         # send_raw_email takes a fully-formatted MIME message.
         # This is a simple (if inexact) way to check for expected headers and body:
         raw_mime = params['RawMessage']['Data']
-        self.assertIsInstance(raw_mime, six.binary_type)  # SendRawEmail expects Data as bytes
+        self.assertIsInstance(raw_mime, bytes)  # SendRawEmail expects Data as bytes
         self.assertIn(b"\nFrom: from@example.com\n", raw_mime)
         self.assertIn(b"\nTo: to@example.com\n", raw_mime)
         self.assertIn(b"\nSubject: Subject here\n", raw_mime)
