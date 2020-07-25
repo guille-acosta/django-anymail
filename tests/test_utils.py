@@ -4,22 +4,12 @@ import base64
 import copy
 import pickle
 from email.mime.image import MIMEImage
-from unittest import skipIf
 
 import six
 from django.http import QueryDict
 from django.test import SimpleTestCase, RequestFactory, override_settings
-from django.utils.translation import ugettext_lazy
-
-try:
-    from django.utils.text import format_lazy  # Django >= 1.11
-except ImportError:
-    format_lazy = None
-
-try:
-    from django.utils.translation import string_concat  # Django < 2.1
-except ImportError:
-    string_concat = None
+from django.utils.text import format_lazy
+from django.utils.translation import gettext_lazy
 
 from anymail.exceptions import AnymailInvalidAddress, _LazyError
 from anymail.utils import (
@@ -151,12 +141,12 @@ class ParseAddressListTests(SimpleTestCase):
         self.assertEqual(parsed_list[0].addr_spec, "one@example.com")
 
     def test_lazy_strings(self):
-        parsed_list = parse_address_list([ugettext_lazy('"Example, Inc." <one@example.com>')])
+        parsed_list = parse_address_list([gettext_lazy('"Example, Inc." <one@example.com>')])
         self.assertEqual(len(parsed_list), 1)
         self.assertEqual(parsed_list[0].display_name, "Example, Inc.")
         self.assertEqual(parsed_list[0].addr_spec, "one@example.com")
 
-        parsed_list = parse_address_list(ugettext_lazy("one@example.com"))
+        parsed_list = parse_address_list(gettext_lazy("one@example.com"))
         self.assertEqual(len(parsed_list), 1)
         self.assertEqual(parsed_list[0].display_name, "")
         self.assertEqual(parsed_list[0].addr_spec, "one@example.com")
@@ -221,7 +211,7 @@ class LazyCoercionTests(SimpleTestCase):
     """Test utils.is_lazy and force_non_lazy*"""
 
     def test_is_lazy(self):
-        self.assertTrue(is_lazy(ugettext_lazy("lazy string is lazy")))
+        self.assertTrue(is_lazy(gettext_lazy("lazy string is lazy")))
 
     def test_not_lazy(self):
         self.assertFalse(is_lazy("text not lazy"))
@@ -230,27 +220,18 @@ class LazyCoercionTests(SimpleTestCase):
         self.assertFalse(is_lazy({'dict': "not lazy"}))
         self.assertFalse(is_lazy(["list", "not lazy"]))
         self.assertFalse(is_lazy(object()))
-        self.assertFalse(is_lazy([ugettext_lazy("doesn't recurse")]))
+        self.assertFalse(is_lazy([gettext_lazy("doesn't recurse")]))
 
     def test_force_lazy(self):
-        result = force_non_lazy(ugettext_lazy("text"))
+        result = force_non_lazy(gettext_lazy("text"))
         self.assertIsInstance(result, six.text_type)
         self.assertEqual(result, "text")
 
-    @skipIf(string_concat is None, "string_concat not in this Django version")
-    def test_force_concat(self):
-        self.assertTrue(is_lazy(string_concat(ugettext_lazy("concatenation"),
-                                              ugettext_lazy("is lazy"))))
-        result = force_non_lazy(string_concat(ugettext_lazy("text"), ugettext_lazy("concat")))
-        self.assertIsInstance(result, six.text_type)
-        self.assertEqual(result, "textconcat")
-
-    @skipIf(format_lazy is None, "format_lazy not in this Django version")
     def test_format_lazy(self):
         self.assertTrue(is_lazy(format_lazy("{0}{1}",
-                                            ugettext_lazy("concatenation"), ugettext_lazy("is lazy"))))
+                                            gettext_lazy("concatenation"), gettext_lazy("is lazy"))))
         result = force_non_lazy(format_lazy("{first}/{second}",
-                                            first=ugettext_lazy("text"), second=ugettext_lazy("format")))
+                                            first=gettext_lazy("text"), second=gettext_lazy("format")))
         self.assertIsInstance(result, six.text_type)
         self.assertEqual(result, "text/format")
 
@@ -269,14 +250,14 @@ class LazyCoercionTests(SimpleTestCase):
         self.assertIsNone(result)
 
     def test_force_dict(self):
-        result = force_non_lazy_dict({'a': 1, 'b': ugettext_lazy("b"),
-                                      'c': {'c1': ugettext_lazy("c1")}})
+        result = force_non_lazy_dict({'a': 1, 'b': gettext_lazy("b"),
+                                      'c': {'c1': gettext_lazy("c1")}})
         self.assertEqual(result, {'a': 1, 'b': "b", 'c': {'c1': "c1"}})
         self.assertIsInstance(result['b'], six.text_type)
         self.assertIsInstance(result['c']['c1'], six.text_type)
 
     def test_force_list(self):
-        result = force_non_lazy_list([0, ugettext_lazy("b"), "c"])
+        result = force_non_lazy_list([0, gettext_lazy("b"), "c"])
         self.assertEqual(result, [0, "b", "c"])  # coerced to list
         self.assertIsInstance(result[1], six.text_type)
 

@@ -1,14 +1,7 @@
 from datetime import date, datetime
 from textwrap import dedent
 
-try:
-    from email import message_from_bytes
-except ImportError:
-    from email import message_from_string
-
-    def message_from_bytes(s):
-        return message_from_string(s.decode('utf-8'))
-
+from email import message_from_bytes
 from email.mime.base import MIMEBase
 from email.mime.image import MIMEImage
 
