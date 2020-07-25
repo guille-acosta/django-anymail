@@ -4,7 +4,6 @@
 #   or
 # runtests.py [tests.test_x tests.test_y.SomeTestCase ...]
 
-from __future__ import print_function
 import sys
 from distutils.util import strtobool
 

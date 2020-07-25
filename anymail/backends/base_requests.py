@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import requests
 import six
 from six.moves.urllib.parse import urljoin

@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 import quopri
 from base64 import b64encode
 from email.utils import collapse_rfc2231_value

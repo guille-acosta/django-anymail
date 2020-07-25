@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from base64 import b64encode, b64decode
 from calendar import timegm
 from datetime import date, datetime

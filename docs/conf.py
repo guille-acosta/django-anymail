@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Anymail documentation build configuration file, created by
 # sphinx-quickstart
 #

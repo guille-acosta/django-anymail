@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from base64 import b64encode
 from decimal import Decimal
 from email.mime.base import MIMEBase

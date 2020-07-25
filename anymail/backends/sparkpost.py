@@ -1,5 +1,3 @@
-from __future__ import absolute_import  # we want the sparkpost package, not our own module
-
 from .base import AnymailBaseBackend, BasePayload
 from ..exceptions import AnymailAPIError, AnymailImproperlyInstalled, AnymailConfigurationError
 from ..message import AnymailRecipientStatus
