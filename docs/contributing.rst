@@ -71,7 +71,7 @@ and Python versions. Tests are run at least once a week, to check whether ESP AP
 and other dependencies have changed out from under Anymail.
 
 For local development, the recommended test command is
-:shell:`tox -e django22-py37-all,django111-py27-all,lint`, which tests a representative
+:shell:`tox -e django31-py38-all,django20-py35-all,lint`, which tests a representative
 combination of Python and Django versions. It also runs :pypi:`flake8` and other
 code-style checkers. Some other test options are covered below, but using this
 tox command catches most problems, and is a good pre-pull-request check.
@@ -98,16 +98,16 @@ Or:
         $ python runtests.py tests.test_mailgun_backend tests.test_mailgun_webhooks
 
 Or to test against multiple versions of Python and Django all at once, use :pypi:`tox`.
-You'll need at least Python 2.7 and Python 3.6 available. (If your system doesn't come
-with those, `pyenv`_ is a helpful way to install and manage multiple Python versions.)
+You'll need some version of Python 3 available. (If your system doesn't come
+with that, `pyenv`_ is a helpful way to install and manage multiple Python versions.)
 
     .. code-block:: console
 
         $ pip install tox  # (if you haven't already)
-        $ tox -e django21-py36-all,django111-py27-all,lint  # test recommended environments
+        $ tox -e django31-py38-all,django20-py35-all,lint  # test recommended environments
 
         ## you can also run just some test cases, e.g.:
-        $ tox -e django21-py36-all,django111-py27-all tests.test_mailgun_backend tests.test_utils
+        $ tox -e django31-py38-all,django20-py35-all tests.test_mailgun_backend tests.test_utils
 
         ## to test more Python/Django versions:
         $ tox --parallel auto  # ALL 20+ envs! (in parallel if possible)
@@ -121,7 +121,7 @@ API keys or other settings. For example:
 
         $ export MAILGUN_TEST_API_KEY='your-Mailgun-API-key'
         $ export MAILGUN_TEST_DOMAIN='mail.example.com'  # sending domain for that API key
-        $ tox -e django21-py36-all tests.test_mailgun_integration
+        $ tox -e django31-py38-all tests.test_mailgun_integration
 
 Check the ``*_integration_tests.py`` files in the `tests source`_ to see which variables
 are required for each ESP. Depending on the supported features, the integration tests for
