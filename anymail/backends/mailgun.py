@@ -121,9 +121,7 @@ class MailgunPayload(RequestsPayload):
             prepared = Request(**params).prepare()
             form_data = prepared.body  # bytes
             for filename in non_ascii_filenames:  # text
-                rfc2231_filename = encode_rfc2231(  # wants a str (text in PY3, bytes in PY2)
-                    filename if isinstance(filename, str) else filename.encode("utf-8"),
-                    charset="utf-8")
+                rfc2231_filename = encode_rfc2231(filename, charset="utf-8")
                 form_data = form_data.replace(
                     b'filename*=' + rfc2231_filename.encode("utf-8"),
                     b'filename="' + filename.encode("utf-8") + b'"')

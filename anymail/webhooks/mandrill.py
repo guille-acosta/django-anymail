@@ -29,7 +29,7 @@ class MandrillSignatureMixin(object):
         webhook_key = get_anymail_setting('webhook_key', esp_name=esp_name, default=None,
                                           kwargs=kwargs, allow_bare=True)
         if webhook_key is not None:
-            self.webhook_key = webhook_key.encode('ascii')  # hmac.new requires bytes key in python 3
+            self.webhook_key = webhook_key.encode('ascii')  # hmac.new requires bytes key
         self.webhook_url = get_anymail_setting('webhook_url', esp_name=esp_name, default=None,
                                                kwargs=kwargs, allow_bare=True)
         # noinspection PyArgumentList

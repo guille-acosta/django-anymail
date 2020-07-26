@@ -166,10 +166,9 @@ class AnymailInboundMessageConstructionTests(SimpleTestCase):
     def test_parse_raw_mime_8bit_utf8(self):
         # In come cases, the message below ends up with 'Content-Transfer-Encoding: 8bit',
         # so needs to be parsed as bytes, not text (see https://bugs.python.org/issue18271).
-        # Message.as_string() returns str, which is is bytes on Python 2 and text on Python 3.
+        # Message.as_string() returns str (text), not bytes.
         # (This might be a Django bug; plain old MIMEText avoids the problem by using
-        # 'Content-Transfer-Encoding: base64', which parses fine as text or bytes.
-        # Django <1.11 on Python 3 also used base64.)
+        # 'Content-Transfer-Encoding: base64', which parses fine as text or bytes.)
         # Either way, AnymailInboundMessage should try to sidestep the whole issue.
         raw = SafeMIMEText("Unicode ✓", "plain", "utf-8").as_string()
         msg = AnymailInboundMessage.parse_raw_mime(raw)
@@ -492,9 +491,11 @@ class AnymailInboundMessageAttachedMessageTests(SimpleTestCase):
         self.assertEqual(orig_msg.get_content_type(), "multipart/related")
 
 
-class EmailParserWorkaroundTests(SimpleTestCase):
-    # Anymail includes workarounds for (some of) the more problematic bugs
-    # in the Python 2 email.parser.Parser.
+class EmailParserBehaviorTests(SimpleTestCase):
+    # Python 3.5+'s EmailParser should handle all of these, so long as it's not
+    # invoked with its default policy=compat32. This double checks we're using it
+    # properly. (Also, older versions of Anymail included workarounds for these
+    # in older, broken versions of the EmailParser.)
 
     def test_parse_folded_headers(self):
         raw = dedent("""\
@@ -537,16 +538,11 @@ class EmailParserWorkaroundTests(SimpleTestCase):
         self.assertEqual(msg.from_email.display_name, "Keith Moore")
         self.assertEqual(msg.from_email.addr_spec, "moore@example.com")
 
-        # When an RFC2047 encoded-word abuts an RFC5322 quoted-word in a *structured* header,
-        # Python 3's parser nicely recombines them into a single quoted word. That's way too
-        # complicated for our Python 2 workaround ...
-        self.assertIn(msg["To"], [  # `To` header will decode to one of these:
-            'Keld Jørn Simonsen <keld@example.com>, "André Pirard, Jr." <PIRARD@example.com>',  # Python 3
-            'Keld Jørn Simonsen <keld@example.com>, André "Pirard, Jr." <PIRARD@example.com>',  # workaround version
-        ])
-        # ... but the two forms are equivalent, and de-structure the same:
+        self.assertEqual(msg["To"],
+                         'Keld Jørn Simonsen <keld@example.com>, '
+                         '"André Pirard, Jr." <PIRARD@example.com>')
         self.assertEqual(msg.to[0].display_name, "Keld Jørn Simonsen")
-        self.assertEqual(msg.to[1].display_name, "André Pirard, Jr.")  # correct in Python 3 *and* workaround!
+        self.assertEqual(msg.to[1].display_name, "André Pirard, Jr.")
 
         # Note: Like email.headerregistry.Address, Anymail decodes an RFC2047-encoded display_name,
         # but does not decode a punycode domain. (Use `idna.decode(domain)` if you need that.)

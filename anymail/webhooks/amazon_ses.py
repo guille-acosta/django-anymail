@@ -11,7 +11,7 @@ from ..exceptions import (
     _LazyError)
 from ..inbound import AnymailInboundMessage
 from ..signals import AnymailInboundEvent, AnymailTrackingEvent, EventType, RejectReason, inbound, tracking
-from ..utils import combine, get_anymail_setting, getfirst
+from ..utils import get_anymail_setting, getfirst
 
 try:
     import boto3
@@ -258,8 +258,7 @@ class AmazonSESTrackingWebhookView(AmazonSESBaseWebhookView):
             )
 
         return [
-            # AnymailTrackingEvent(**common_props, **recipient_props)  # Python 3.5+ (PEP-448 syntax)
-            AnymailTrackingEvent(**combine(common_props, recipient_props))
+            AnymailTrackingEvent(**common_props, **recipient_props)
             for recipient_props in per_recipient_props
         ]
 

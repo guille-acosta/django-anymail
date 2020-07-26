@@ -141,10 +141,7 @@ class AnymailInboundMessage(Message, object):  # `object` ensures new-style clas
             # (Note that self.is_multipart() misleadingly returns True in this case.)
             payload = self.get_payload()
             assert len(payload) == 1  # should be exactly one message
-            try:
-                return payload[0].as_bytes()  # Python 3
-            except AttributeError:
-                return payload[0].as_string().encode('utf-8')
+            return payload[0].as_bytes()
         elif maintype == 'multipart':
             # The attachment itself is multipart; the payload is a list of parts,
             # and it's not clear which one is the "content".

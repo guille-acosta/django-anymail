@@ -30,7 +30,7 @@ class MailgunBaseWebhookView(AnymailBaseWebhookView):
                                       kwargs=kwargs, allow_bare=True, default=None)
         webhook_signing_key = get_anymail_setting('webhook_signing_key', esp_name=self.esp_name,
                                                   kwargs=kwargs, default=UNSET if api_key is None else api_key)
-        self.webhook_signing_key = webhook_signing_key.encode('ascii')  # hmac.new requires bytes key in python 3
+        self.webhook_signing_key = webhook_signing_key.encode('ascii')  # hmac.new requires bytes key
         super(MailgunBaseWebhookView, self).__init__(**kwargs)
 
     def validate_request(self, request):
@@ -54,7 +54,7 @@ class MailgunBaseWebhookView(AnymailBaseWebhookView):
                 # (Fortunately, Django QueryDict is specced to return the last value.)
                 token = request.POST['token']
                 timestamp = request.POST['timestamp']
-                signature = str(request.POST['signature'])  # force to same type as hexdigest() (for python2)
+                signature = request.POST['signature']
             except KeyError:
                 raise AnymailWebhookValidationFailure("Mailgun webhook called without required security fields")
 

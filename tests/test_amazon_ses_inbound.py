@@ -261,9 +261,8 @@ class AmazonSESInboundTests(WebhookTestCase, AmazonSESWebhookTestsMixin):
         self.assertEqual([str(to) for to in message.to],
                          ['Recipient <inbound@example.com>', 'someone-else@example.org'])
         self.assertEqual(message.subject, 'Test inbound message')
-        # rstrip below because the Python 3 EmailBytesParser converts \r\n to \n, but the Python 2 version doesn't
-        self.assertEqual(message.text.rstrip(), "It's a body\N{HORIZONTAL ELLIPSIS}")
-        self.assertEqual(message.html.rstrip(), """<div dir="ltr">It's a body\N{HORIZONTAL ELLIPSIS}</div>""")
+        self.assertEqual(message.text, "It's a body\N{HORIZONTAL ELLIPSIS}\n")
+        self.assertEqual(message.html, """<div dir="ltr">It's a body\N{HORIZONTAL ELLIPSIS}</div>\n""")
         self.assertIsNone(message.spam_detected)
 
     def test_inbound_s3_failure_message(self):

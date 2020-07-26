@@ -9,11 +9,6 @@ from anymail.message import AnymailMessage
 
 from .utils import AnymailTestMixin, sample_image_path
 
-try:
-    ResourceWarning
-except NameError:
-    ResourceWarning = Warning  # Python 2
-
 
 AMAZON_SES_TEST_ACCESS_KEY_ID = os.getenv("AMAZON_SES_TEST_ACCESS_KEY_ID")
 AMAZON_SES_TEST_SECRET_ACCESS_KEY = os.getenv("AMAZON_SES_TEST_SECRET_ACCESS_KEY")

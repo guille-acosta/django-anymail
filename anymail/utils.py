@@ -236,9 +236,8 @@ class EmailAddress(object):
         This is essentially the same as :func:`email.utils.formataddr`
         on the EmailAddress's name and email properties, but uses
         Django's :func:`~django.core.mail.message.sanitize_address`
-        for improved PY2/3 compatibility, consistent handling of
-        encoding (a.k.a. charset), and proper handling of IDN
-        domain portions.
+        for consistent handling of encoding (a.k.a. charset) and
+        proper handling of IDN domain portions.
 
         :param str|None encoding:
             the charset to use for the display-name portion;
@@ -276,11 +275,7 @@ class Attachment(object):
             self.name = attachment.get_filename()
             self.content = attachment.get_payload(decode=True)
             if self.content is None:
-                if hasattr(attachment, 'as_bytes'):
-                    self.content = attachment.as_bytes()
-                else:
-                    # Python 2.7 fallback
-                    self.content = attachment.as_string().encode(self.encoding)
+                self.content = attachment.as_bytes()
             self.mimetype = attachment.get_content_type()
 
             content_disposition = attachment.get_content_disposition()

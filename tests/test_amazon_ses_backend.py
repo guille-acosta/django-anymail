@@ -255,7 +255,7 @@ class AmazonSESBackendStandardEmailTests(AmazonSESBackendMockAPITestCase):
         self.assertEqual(params['Source'], "from1@example.com")
 
     def test_commas_in_subject(self):
-        """Anymail works around a Python 2 email header bug that adds unwanted spaces after commas in long subjects"""
+        """There used to be a Python email header bug that added unwanted spaces after commas in long subjects"""
         self.message.subject = "100,000,000 isn't a number you'd really want to break up in this email subject, right?"
         self.message.send()
         sent_message = self.get_sent_message()

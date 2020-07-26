@@ -1,9 +1,5 @@
 from email.charset import Charset, QP
-from email.header import Header
-from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
-
-from django.core.mail import BadHeaderError
 
 from .base import AnymailBaseBackend, BasePayload
 from .._version import __version__
@@ -21,34 +17,6 @@ except ImportError:
 
 # boto3 has several root exception classes; this is meant to cover all of them
 BOTO_BASE_ERRORS = (BotoCoreError, ClientError, ConnectionError)
-
-
-# Work around Python 2 bug in email.message.Message.to_string, where long headers
-# containing commas or semicolons get an extra space inserted after every ',' or ';'
-# not already followed by a space. https://bugs.python.org/issue25257
-if Header("test,Python2,header,comma,bug", maxlinelen=20).encode() == "test,Python2,header,comma,bug":
-    # no workaround needed
-    HeaderBugWorkaround = None
-
-    def add_header(message, name, val):
-        message[name] = val
-
-else:
-    # workaround: custom Header subclass that won't consider ',' and ';' as folding candidates
-
-    class HeaderBugWorkaround(Header):
-        def encode(self, splitchars=' ', **kwargs):  # only split on spaces, rather than splitchars=';, '
-            return Header.encode(self, splitchars, **kwargs)
-
-    def add_header(message, name, val):
-        # Must bypass Django's SafeMIMEMessage.__set_item__, because its call to
-        # forbid_multi_line_headers converts the val back to a str, undoing this
-        # workaround. That makes this code responsible for sanitizing val:
-        if '\n' in val or '\r' in val:
-            raise BadHeaderError("Header values can't contain newlines (got %r for header %r)" % (val, name))
-        val = HeaderBugWorkaround(val, header_name=name)
-        assert isinstance(message, MIMEBase)
-        MIMEBase.__setitem__(message, name, val)
 
 
 class EmailBackend(AnymailBaseBackend):
@@ -128,9 +96,6 @@ class AmazonSESSendRawEmailPayload(AmazonSESBasePayload):
         super(AmazonSESSendRawEmailPayload, self).init_payload()
         self.all_recipients = []
         self.mime_message = self.message.message()
-        if HeaderBugWorkaround and "Subject" in self.mime_message:
-            # (message.message() will have already checked subject for BadHeaderError)
-            self.mime_message.replace_header("Subject", HeaderBugWorkaround(self.message.subject))
 
         # Work around an Amazon SES bug where, if all of:
         #   - the message body (text or html) contains non-ASCII characters
@@ -248,14 +213,14 @@ class AmazonSESSendRawEmailPayload(AmazonSESBasePayload):
         # (See "How do message tags work?" in https://aws.amazon.com/blogs/ses/introducing-sending-metrics/
         # and https://forums.aws.amazon.com/thread.jspa?messageID=782922.)
         # To support reliable retrieval in webhooks, just use custom headers for metadata.
-        add_header(self.mime_message, "X-Metadata", self.serialize_json(metadata))
+        self.mime_message["X-Metadata"] = self.serialize_json(metadata)
 
     def set_tags(self, tags):
         # See note about Amazon SES Message Tags and custom headers in set_metadata above.
         # To support reliable retrieval in webhooks, use custom headers for tags.
         # (There are no restrictions on number or content for custom header tags.)
         for tag in tags:
-            add_header(self.mime_message, "X-Tag", tag)  # creates multiple X-Tag headers, one per tag
+            self.mime_message.add_header("X-Tag", tag)  # creates multiple X-Tag headers, one per tag
 
         # Also *optionally* pass a single Message Tag if the AMAZON_SES_MESSAGE_TAG_NAME
         # Anymail setting is set (default no). The AWS API restricts tag content in this case.
