@@ -37,7 +37,7 @@ class AmazonSESBaseWebhookView(AnymailBaseWebhookView):
             "auto_confirm_sns_subscriptions", esp_name=self.esp_name, kwargs=kwargs, default=True)
         # boto3 params for connecting to S3 (inbound downloads) and SNS (auto-confirm subscriptions):
         self.session_params, self.client_params = _get_anymail_boto3_params(kwargs=kwargs)
-        super(AmazonSESBaseWebhookView, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     @staticmethod
     def _parse_sns_message(request):
@@ -80,7 +80,7 @@ class AmazonSESBaseWebhookView(AnymailBaseWebhookView):
             response = HttpResponse(status=401)
             response["WWW-Authenticate"] = 'Basic realm="Anymail WEBHOOK_SECRET"'
             return response
-        return super(AmazonSESBaseWebhookView, self).post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
     def parse_events(self, request):
         # request *has* been validated by now
@@ -345,8 +345,7 @@ class AnymailBotoClientAPIError(AnymailAPIError, ClientError):
         assert isinstance(raised_from, ClientError)
         assert len(kwargs) == 0  # can't support other kwargs
         # init self as boto ClientError (which doesn't cooperatively subclass):
-        super(AnymailBotoClientAPIError, self).__init__(
-            error_response=raised_from.response, operation_name=raised_from.operation_name)
+        super().__init__(error_response=raised_from.response, operation_name=raised_from.operation_name)
         # emulate AnymailError init:
         self.args = args
         self.raised_from = raised_from

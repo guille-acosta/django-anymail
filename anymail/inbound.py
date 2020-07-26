@@ -9,7 +9,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from .utils import angle_wrap, parse_address_list, parse_rfc2822date
 
 
-class AnymailInboundMessage(Message, object):  # `object` ensures new-style class in Python 2)
+class AnymailInboundMessage(Message):
     """
     A normalized, parsed inbound email message.
 
@@ -31,7 +31,7 @@ class AnymailInboundMessage(Message, object):  # `object` ensures new-style clas
 
     def __init__(self, *args, **kwargs):
         # Note: this must accept zero arguments, for use with message_from_string (email.parser)
-        super(AnymailInboundMessage, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Additional attrs provided by some ESPs:
         self.envelope_sender = None

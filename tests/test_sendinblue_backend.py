@@ -12,7 +12,7 @@ from django.utils.timezone import get_fixed_timezone, override as override_curre
 from anymail.exceptions import (AnymailAPIError, AnymailConfigurationError, AnymailSerializationError,
                                 AnymailUnsupportedFeature)
 from anymail.message import attach_inline_image_file
-from .mock_requests_backend import RequestsBackendMockAPITestCase, SessionSharingTestCasesMixin
+from .mock_requests_backend import RequestsBackendMockAPITestCase, SessionSharingTestCases
 from .utils import sample_image_content, sample_image_path, SAMPLE_IMAGE_FILENAME, AnymailTestMixin
 
 
@@ -25,7 +25,7 @@ class SendinBlueBackendMockAPITestCase(RequestsBackendMockAPITestCase):
     DEFAULT_STATUS_CODE = 201  # SendinBlue v3 uses '201 Created' for success (in most cases)
 
     def setUp(self):
-        super(SendinBlueBackendMockAPITestCase, self).setUp()
+        super().setUp()
         # Simple message useful for many tests
         self.message = mail.EmailMultiAlternatives('Subject', 'Text Body', 'from@example.com', ['to@example.com'])
 
@@ -443,9 +443,9 @@ class SendinBlueBackendRecipientsRefusedTests(SendinBlueBackendMockAPITestCase):
 
 
 @tag('sendinblue')
-class SendinBlueBackendSessionSharingTestCase(SessionSharingTestCasesMixin, SendinBlueBackendMockAPITestCase):
+class SendinBlueBackendSessionSharingTestCase(SessionSharingTestCases, SendinBlueBackendMockAPITestCase):
     """Requests session sharing tests"""
-    pass  # tests are defined in the mixin
+    pass  # tests are defined in SessionSharingTestCases
 
 
 @tag('sendinblue')

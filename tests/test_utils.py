@@ -292,7 +292,7 @@ class RequestUtilsTests(SimpleTestCase):
 
     def setUp(self):
         self.request_factory = RequestFactory()
-        super(RequestUtilsTests, self).setUp()
+        super().setUp()
 
     @staticmethod
     def basic_auth(username, password):

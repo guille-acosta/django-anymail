@@ -12,7 +12,7 @@ from anymail.exceptions import (AnymailAPIError, AnymailSerializationError,
                                 AnymailRequestsAPIError)
 from anymail.message import attach_inline_image_file
 
-from .mock_requests_backend import RequestsBackendMockAPITestCase, SessionSharingTestCasesMixin
+from .mock_requests_backend import RequestsBackendMockAPITestCase, SessionSharingTestCases
 from .utils import sample_image_content, sample_image_path, SAMPLE_IMAGE_FILENAME, AnymailTestMixin, decode_att
 
 
@@ -47,7 +47,7 @@ class MailjetBackendMockAPITestCase(RequestsBackendMockAPITestCase):
     }"""
 
     def setUp(self):
-        super(MailjetBackendMockAPITestCase, self).setUp()
+        super().setUp()
         # Simple message useful for many tests
         self.message = mail.EmailMultiAlternatives('Subject', 'Text Body', 'from@example.com', ['to@example.com'])
 
@@ -654,9 +654,9 @@ class MailjetBackendAnymailFeatureTests(MailjetBackendMockAPITestCase):
 
 
 @tag('mailjet')
-class MailjetBackendSessionSharingTestCase(SessionSharingTestCasesMixin, MailjetBackendMockAPITestCase):
+class MailjetBackendSessionSharingTestCase(SessionSharingTestCases, MailjetBackendMockAPITestCase):
     """Requests session sharing tests"""
-    pass  # tests are defined in the mixin
+    pass  # tests are defined in SessionSharingTestCases
 
 
 @tag('mailjet')

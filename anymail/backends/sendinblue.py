@@ -30,7 +30,7 @@ class EmailBackend(AnymailRequestsBackend):
         )
         if not api_url.endswith("/"):
             api_url += "/"
-        super(EmailBackend, self).__init__(api_url, **kwargs)
+        super().__init__(api_url, **kwargs)
 
     def build_message_payload(self, message, defaults):
         return SendinBluePayload(message, defaults, self)
@@ -71,7 +71,7 @@ class SendinBluePayload(RequestsPayload):
         http_headers['api-key'] = backend.api_key
         http_headers['Content-Type'] = 'application/json'
 
-        super(SendinBluePayload, self).__init__(message, defaults, backend, headers=http_headers, *args, **kwargs)
+        super().__init__(message, defaults, backend, headers=http_headers, *args, **kwargs)
 
     def get_api_endpoint(self):
         return "smtp/email"

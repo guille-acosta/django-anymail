@@ -26,7 +26,7 @@ class PostmarkBackendIntegrationTests(AnymailTestMixin, SimpleTestCase):
     """
 
     def setUp(self):
-        super(PostmarkBackendIntegrationTests, self).setUp()
+        super().setUp()
         self.message = AnymailMessage('Anymail Postmark integration test', 'Text content',
                                       'from@example.com', ['test+to1@anymail.info'])
         self.message.attach_alternative('<p>HTML content</p>', "text/html")

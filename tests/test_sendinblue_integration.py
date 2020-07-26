@@ -31,7 +31,7 @@ class SendinBlueBackendIntegrationTests(AnymailTestMixin, SimpleTestCase):
     """
 
     def setUp(self):
-        super(SendinBlueBackendIntegrationTests, self).setUp()
+        super().setUp()
 
         self.message = AnymailMessage('Anymail SendinBlue integration test', 'Text content',
                                       'from@test-sb.anymail.info', ['test+to1@anymail.info'])

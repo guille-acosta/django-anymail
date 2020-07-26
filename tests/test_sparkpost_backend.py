@@ -24,7 +24,7 @@ class SparkPostBackendMockAPITestCase(AnymailTestMixin, SimpleTestCase):
     """TestCase that uses SparkPostEmailBackend with a mocked transmissions.send API"""
 
     def setUp(self):
-        super(SparkPostBackendMockAPITestCase, self).setUp()
+        super().setUp()
         self.patch_send = patch('sparkpost.Transmissions.send', autospec=True)
         self.mock_send = self.patch_send.start()
         self.addCleanup(self.patch_send.stop)

@@ -12,7 +12,7 @@ from mock import ANY
 
 from anymail.signals import AnymailTrackingEvent
 from anymail.webhooks.mandrill import MandrillCombinedWebhookView, MandrillTrackingWebhookView
-from .webhook_cases import WebhookBasicAuthTestsMixin, WebhookTestCase
+from .webhook_cases import WebhookBasicAuthTestCase, WebhookTestCase
 
 TEST_WEBHOOK_KEY = 'TEST_WEBHOOK_KEY'
 
@@ -64,14 +64,14 @@ class MandrillWebhookSettingsTestCase(WebhookTestCase):
 
 @tag('mandrill')
 @override_settings(ANYMAIL_MANDRILL_WEBHOOK_KEY=TEST_WEBHOOK_KEY)
-class MandrillWebhookSecurityTestCase(WebhookTestCase, WebhookBasicAuthTestsMixin):
+class MandrillWebhookSecurityTestCase(WebhookBasicAuthTestCase):
     should_warn_if_no_auth = False  # because we check webhook signature
 
     def call_webhook(self):
         kwargs = mandrill_args([{'event': 'send'}])
         return self.client.post(**kwargs)
 
-    # Additional tests are in WebhookBasicAuthTestsMixin
+    # Additional tests are in WebhookBasicAuthTestCase
 
     def test_verifies_correct_signature(self):
         kwargs = mandrill_args([{'event': 'send'}])
@@ -111,7 +111,7 @@ class MandrillWebhookSecurityTestCase(WebhookTestCase, WebhookBasicAuthTestsMixi
         response = self.client.post(SERVER_NAME="127.0.0.1", **kwargs)
         self.assertEqual(response.status_code, 200)
 
-    # override WebhookBasicAuthTestsMixin version of this test
+    # override WebhookBasicAuthTestCase version of this test
     @override_settings(ANYMAIL={'WEBHOOK_SECRET': ['cred1:pass1', 'cred2:pass2']})
     def test_supports_credential_rotation(self):
         """You can supply a list of basic auth credentials, and any is allowed"""

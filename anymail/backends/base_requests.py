@@ -17,7 +17,7 @@ class AnymailRequestsBackend(AnymailBaseBackend):
         """Init options from Django settings"""
         self.api_url = api_url
         self.timeout = get_anymail_setting('requests_timeout', kwargs=kwargs, default=30)
-        super(AnymailRequestsBackend, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.session = None
 
     def open(self):
@@ -55,7 +55,7 @@ class AnymailRequestsBackend(AnymailBaseBackend):
                 "Session has not been opened in {class_name}._send. "
                 "(This is either an implementation error in {class_name}, "
                 "or you are incorrectly calling _send directly.)".format(class_name=class_name))
-        return super(AnymailRequestsBackend, self)._send(message)
+        return super()._send(message)
 
     def post_to_esp(self, payload, message):
         """Post payload to ESP send API endpoint, and return the raw response.
@@ -143,7 +143,7 @@ class RequestsPayload(BasePayload):
         self.headers = headers
         self.files = files
         self.auth = auth
-        super(RequestsPayload, self).__init__(message, defaults, backend)
+        super().__init__(message, defaults, backend)
 
     def get_request_params(self, api_url):
         """Returns a dict of requests.request params that will send payload to the ESP.

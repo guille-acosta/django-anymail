@@ -7,7 +7,7 @@ from django.core.mail import EmailMessage, EmailMultiAlternatives, make_msgid
 from .utils import UNSET
 
 
-class AnymailMessageMixin(object):
+class AnymailMessageMixin(EmailMessage):
     """Mixin for EmailMessage that exposes Anymail features.
 
     Use of this mixin is optional. You can always just set Anymail
@@ -32,8 +32,7 @@ class AnymailMessageMixin(object):
         self.merge_metadata = kwargs.pop('merge_metadata', UNSET)
         self.anymail_status = AnymailStatus()
 
-        # noinspection PyArgumentList
-        super(AnymailMessageMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def attach_inline_image_file(self, path, subtype=None, idstring="img", domain=None):
         """Add inline image from file path to an EmailMessage, and return its content id"""
@@ -82,7 +81,7 @@ ANYMAIL_STATUSES = [
 ]
 
 
-class AnymailRecipientStatus(object):
+class AnymailRecipientStatus:
     """Information about an EmailMessage's send status for a single recipient"""
 
     def __init__(self, message_id, status):
@@ -90,7 +89,7 @@ class AnymailRecipientStatus(object):
         self.status = status  # one of ANYMAIL_STATUSES, or None for not yet sent to ESP
 
 
-class AnymailStatus(object):
+class AnymailStatus:
     """Information about an EmailMessage's send status for all recipients"""
 
     def __init__(self):

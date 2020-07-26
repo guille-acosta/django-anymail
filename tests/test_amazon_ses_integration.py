@@ -55,7 +55,7 @@ class AmazonSESBackendIntegrationTests(AnymailTestMixin, SimpleTestCase):
     """
 
     def setUp(self):
-        super(AmazonSESBackendIntegrationTests, self).setUp()
+        super().setUp()
         self.message = AnymailMessage('Anymail Amazon SES integration test', 'Text content',
                                       'test@test-ses.anymail.info', ['success@simulator.amazonses.com'])
         self.message.attach_alternative('<p>HTML content</p>', "text/html")

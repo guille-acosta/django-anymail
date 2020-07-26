@@ -8,16 +8,16 @@ from mock import ANY
 from anymail.signals import AnymailTrackingEvent
 from anymail.webhooks.sparkpost import SparkPostTrackingWebhookView
 
-from .webhook_cases import WebhookBasicAuthTestsMixin, WebhookTestCase
+from .webhook_cases import WebhookBasicAuthTestCase, WebhookTestCase
 
 
 @tag('sparkpost')
-class SparkPostWebhookSecurityTestCase(WebhookTestCase, WebhookBasicAuthTestsMixin):
+class SparkPostWebhookSecurityTestCase(WebhookBasicAuthTestCase):
     def call_webhook(self):
         return self.client.post('/anymail/sparkpost/tracking/',
                                 content_type='application/json', data=json.dumps([]))
 
-    # Actual tests are in WebhookBasicAuthTestsMixin
+    # Actual tests are in WebhookBasicAuthTestCase
 
 
 @tag('sparkpost')

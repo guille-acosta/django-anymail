@@ -7,16 +7,16 @@ from mock import ANY
 
 from anymail.signals import AnymailTrackingEvent
 from anymail.webhooks.sendinblue import SendinBlueTrackingWebhookView
-from .webhook_cases import WebhookBasicAuthTestsMixin, WebhookTestCase
+from .webhook_cases import WebhookBasicAuthTestCase, WebhookTestCase
 
 
 @tag('sendinblue')
-class SendinBlueWebhookSecurityTestCase(WebhookTestCase, WebhookBasicAuthTestsMixin):
+class SendinBlueWebhookSecurityTestCase(WebhookBasicAuthTestCase):
     def call_webhook(self):
         return self.client.post('/anymail/sendinblue/tracking/',
                                 content_type='application/json', data=json.dumps({}))
 
-    # Actual tests are in WebhookBasicAuthTestsMixin
+    # Actual tests are in WebhookBasicAuthTestCase
 
 
 @tag('sendinblue')

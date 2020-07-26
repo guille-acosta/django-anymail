@@ -15,7 +15,7 @@ from anymail.exceptions import (
     AnymailRequestsAPIError, AnymailUnsupportedFeature)
 from anymail.message import attach_inline_image_file
 
-from .mock_requests_backend import RequestsBackendMockAPITestCase, SessionSharingTestCasesMixin
+from .mock_requests_backend import RequestsBackendMockAPITestCase, SessionSharingTestCases
 from .utils import (AnymailTestMixin, sample_email_content,
                     sample_image_content, sample_image_path, SAMPLE_IMAGE_FILENAME)
 
@@ -30,7 +30,7 @@ class MailgunBackendMockAPITestCase(RequestsBackendMockAPITestCase):
     }"""
 
     def setUp(self):
-        super(MailgunBackendMockAPITestCase, self).setUp()
+        super().setUp()
         # Simple message useful for many tests
         self.message = mail.EmailMultiAlternatives('Subject', 'Text Body', 'from@example.com', ['to@example.com'])
 
@@ -758,9 +758,9 @@ class MailgunBackendRecipientsRefusedTests(MailgunBackendMockAPITestCase):
 
 
 @tag('mailgun')
-class MailgunBackendSessionSharingTestCase(SessionSharingTestCasesMixin, MailgunBackendMockAPITestCase):
+class MailgunBackendSessionSharingTestCase(SessionSharingTestCases, MailgunBackendMockAPITestCase):
     """Requests session sharing tests"""
-    pass  # tests are defined in the mixin
+    pass  # tests are defined in SessionSharingTestCases
 
 
 @tag('mailgun')

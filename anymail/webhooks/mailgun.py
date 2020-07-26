@@ -31,10 +31,10 @@ class MailgunBaseWebhookView(AnymailBaseWebhookView):
         webhook_signing_key = get_anymail_setting('webhook_signing_key', esp_name=self.esp_name,
                                                   kwargs=kwargs, default=UNSET if api_key is None else api_key)
         self.webhook_signing_key = webhook_signing_key.encode('ascii')  # hmac.new requires bytes key
-        super(MailgunBaseWebhookView, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def validate_request(self, request):
-        super(MailgunBaseWebhookView, self).validate_request(request)  # first check basic auth if enabled
+        super().validate_request(request)  # first check basic auth if enabled
         if request.content_type == "application/json":
             # New-style webhook: json payload with separate signature block
             try:

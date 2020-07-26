@@ -20,7 +20,7 @@ from .webhook_cases import WebhookTestCase
 class AmazonSESInboundTests(WebhookTestCase, AmazonSESWebhookTestsMixin):
 
     def setUp(self):
-        super(AmazonSESInboundTests, self).setUp()
+        super().setUp()
         # Mock boto3.session.Session().client('s3').download_fileobj
         # (We could also use botocore.stub.Stubber, but mock works well with our test structure)
         self.patch_boto3_session = patch('anymail.webhooks.amazon_ses.boto3.session.Session', autospec=True)

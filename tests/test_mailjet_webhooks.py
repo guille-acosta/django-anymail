@@ -7,16 +7,16 @@ from mock import ANY
 
 from anymail.signals import AnymailTrackingEvent
 from anymail.webhooks.mailjet import MailjetTrackingWebhookView
-from .webhook_cases import WebhookBasicAuthTestsMixin, WebhookTestCase
+from .webhook_cases import WebhookBasicAuthTestCase, WebhookTestCase
 
 
 @tag('mailjet')
-class MailjetWebhookSecurityTestCase(WebhookTestCase, WebhookBasicAuthTestsMixin):
+class MailjetWebhookSecurityTestCase(WebhookBasicAuthTestCase):
     def call_webhook(self):
         return self.client.post('/anymail/mailjet/tracking/',
                                 content_type='application/json', data=json.dumps([]))
 
-    # Actual tests are in WebhookBasicAuthTestsMixin
+    # Actual tests are in WebhookBasicAuthTestCase
 
 
 @tag('mailjet')

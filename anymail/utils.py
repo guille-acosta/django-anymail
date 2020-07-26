@@ -179,7 +179,7 @@ def parse_single_address(address, field=None):
         return parsed[0]
 
 
-class EmailAddress(object):
+class EmailAddress:
     """A sanitized, complete email address with easy access
     to display-name, addr-spec (email), etc.
 
@@ -250,7 +250,7 @@ class EmailAddress(object):
         return self.address
 
 
-class Attachment(object):
+class Attachment:
     """A normalized EmailMessage.attachments item with additional functionality
 
     Normalized to have these properties:

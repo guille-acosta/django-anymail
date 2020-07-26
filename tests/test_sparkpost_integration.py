@@ -36,7 +36,7 @@ class SparkPostBackendIntegrationTests(AnymailTestMixin, SimpleTestCase):
     """
 
     def setUp(self):
-        super(SparkPostBackendIntegrationTests, self).setUp()
+        super().setUp()
         self.message = AnymailMessage('Anymail SparkPost integration test', 'Text content',
                                       'test@test-sp.anymail.info', ['to@test.sink.sparkpostmail.com'])
         self.message.attach_alternative('<p>HTML content</p>', "text/html")

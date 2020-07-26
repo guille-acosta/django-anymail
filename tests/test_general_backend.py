@@ -28,7 +28,7 @@ class SettingsTestBackend(TestBackend):
                                             default=None, allow_bare=True)
         self.password = get_anymail_setting('password', esp_name=esp_name, kwargs=kwargs,
                                             default=None, allow_bare=True)
-        super(SettingsTestBackend, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 @override_settings(EMAIL_BACKEND='anymail.backends.test.EmailBackend')
@@ -36,7 +36,7 @@ class TestBackendTestCase(AnymailTestMixin, SimpleTestCase):
     """Base TestCase using Anymail's Test EmailBackend"""
 
     def setUp(self):
-        super(TestBackendTestCase, self).setUp()
+        super().setUp()
         # Simple message useful for many tests
         self.message = AnymailMessage('Subject', 'Text Body', 'from@example.com', ['to@example.com'])
 
@@ -430,7 +430,7 @@ class BatchSendDetectionTestCase(TestBackendTestCase):
     """Tests shared code to consistently determine whether to use batch send"""
 
     def setUp(self):
-        super(BatchSendDetectionTestCase, self).setUp()
+        super().setUp()
         self.backend = TestBackend()
 
     def test_default_is_not_batch(self):
@@ -459,7 +459,7 @@ class BatchSendDetectionTestCase(TestBackendTestCase):
             def set_cc(self, emails):
                 if self.is_batch():  # this won't work here!
                     self.unsupported_feature("cc with batch send")
-                super(ImproperlyImplementedPayload, self).set_cc(emails)
+                super().set_cc(emails)
 
         connection = mail.get_connection('anymail.backends.test.EmailBackend',
                                          payload_class=ImproperlyImplementedPayload)

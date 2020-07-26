@@ -7,16 +7,16 @@ from mock import ANY
 
 from anymail.signals import AnymailTrackingEvent
 from anymail.webhooks.sendgrid import SendGridTrackingWebhookView
-from .webhook_cases import WebhookBasicAuthTestsMixin, WebhookTestCase
+from .webhook_cases import WebhookBasicAuthTestCase, WebhookTestCase
 
 
 @tag('sendgrid')
-class SendGridWebhookSecurityTestCase(WebhookTestCase, WebhookBasicAuthTestsMixin):
+class SendGridWebhookSecurityTestCase(WebhookBasicAuthTestCase):
     def call_webhook(self):
         return self.client.post('/anymail/sendgrid/tracking/',
                                 content_type='application/json', data=json.dumps([]))
 
-    # Actual tests are in WebhookBasicAuthTestsMixin
+    # Actual tests are in WebhookBasicAuthTestCase
 
 
 @tag('sendgrid')

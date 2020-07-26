@@ -7,14 +7,14 @@ from base64 import b64encode
 from django.utils.crypto import constant_time_compare
 from django.utils.timezone import utc
 
-from .base import AnymailBaseWebhookView
+from .base import AnymailBaseWebhookView, AnymailCoreWebhookView
 from ..exceptions import AnymailWebhookValidationFailure
 from ..inbound import AnymailInboundMessage
 from ..signals import inbound, tracking, AnymailInboundEvent, AnymailTrackingEvent, EventType
 from ..utils import get_anymail_setting, getfirst, get_request_uri
 
 
-class MandrillSignatureMixin(object):
+class MandrillSignatureMixin(AnymailCoreWebhookView):
     """Validates Mandrill webhook signature"""
 
     # These can be set from kwargs in View.as_view, or pulled from settings in init:
@@ -22,7 +22,6 @@ class MandrillSignatureMixin(object):
     webhook_url = None  # optional; defaults to actual url used
 
     def __init__(self, **kwargs):
-        # noinspection PyUnresolvedReferences
         esp_name = self.esp_name
         # webhook_key is required for POST, but not for HEAD when Mandrill validates webhook url.
         # Defer "missing setting" error until we actually try to use it in the POST...
@@ -32,13 +31,11 @@ class MandrillSignatureMixin(object):
             self.webhook_key = webhook_key.encode('ascii')  # hmac.new requires bytes key
         self.webhook_url = get_anymail_setting('webhook_url', esp_name=esp_name, default=None,
                                                kwargs=kwargs, allow_bare=True)
-        # noinspection PyArgumentList
-        super(MandrillSignatureMixin, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def validate_request(self, request):
         if self.webhook_key is None:
             # issue deferred "missing setting" error (re-call get-setting without a default)
-            # noinspection PyUnresolvedReferences
             get_anymail_setting('webhook_key', esp_name=self.esp_name, allow_bare=True)
 
         try:

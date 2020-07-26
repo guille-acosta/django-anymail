@@ -23,7 +23,7 @@ class EmailBackend(AnymailRequestsBackend):
                                       default="https://api.mailjet.com/v3")
         if not api_url.endswith("/"):
             api_url += "/"
-        super(EmailBackend, self).__init__(api_url, **kwargs)
+        super().__init__(api_url, **kwargs)
 
     def build_message_payload(self, message, defaults):
         return MailjetPayload(message, defaults, self)
@@ -34,7 +34,7 @@ class EmailBackend(AnymailRequestsBackend):
             raise AnymailRequestsAPIError(
                 "Invalid Mailjet API key or secret",
                 email_message=message, payload=payload, response=response, backend=self)
-        super(EmailBackend, self).raise_for_status(response, payload, message)
+        super().raise_for_status(response, payload, message)
 
     def parse_recipient_status(self, response, payload, message):
         # Mailjet's (v3.0) transactional send API is not covered in their reference docs.
@@ -86,8 +86,7 @@ class MailjetPayload(RequestsPayload):
         self.metadata = None
         self.merge_data = {}
         self.merge_metadata = {}
-        super(MailjetPayload, self).__init__(message, defaults, backend,
-                                             auth=auth, headers=http_headers, *args, **kwargs)
+        super().__init__(message, defaults, backend, auth=auth, headers=http_headers, *args, **kwargs)
 
     def get_api_endpoint(self):
         return "send"

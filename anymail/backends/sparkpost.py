@@ -18,7 +18,7 @@ class EmailBackend(AnymailBaseBackend):
 
     def __init__(self, **kwargs):
         """Init options from Django settings"""
-        super(EmailBackend, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         # SPARKPOST_API_KEY is optional - library reads from env by default
         self.api_key = get_anymail_setting('api_key', esp_name=self.esp_name,
                                            kwargs=kwargs, allow_bare=True, default=None)

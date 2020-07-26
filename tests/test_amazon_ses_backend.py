@@ -19,7 +19,7 @@ class AmazonSESBackendMockAPITestCase(AnymailTestMixin, SimpleTestCase):
     """TestCase that uses the Amazon SES EmailBackend with a mocked boto3 client"""
 
     def setUp(self):
-        super(AmazonSESBackendMockAPITestCase, self).setUp()
+        super().setUp()
 
         # Mock boto3.session.Session().client('ses').send_raw_email (and any other client operations)
         # (We could also use botocore.stub.Stubber, but mock works well with our test structure)

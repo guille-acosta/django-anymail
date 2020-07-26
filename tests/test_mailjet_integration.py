@@ -36,7 +36,7 @@ class MailjetBackendIntegrationTests(AnymailTestMixin, SimpleTestCase):
     """
 
     def setUp(self):
-        super(MailjetBackendIntegrationTests, self).setUp()
+        super().setUp()
         self.message = AnymailMessage('Anymail Mailjet integration test', 'Text content',
                                       'test@test-mj.anymail.info', ['test+to1@anymail.info'])
         self.message.attach_alternative('<p>HTML content</p>', "text/html")

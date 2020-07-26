@@ -8,16 +8,16 @@ from mock import ANY
 from anymail.exceptions import AnymailConfigurationError
 from anymail.signals import AnymailTrackingEvent
 from anymail.webhooks.postmark import PostmarkTrackingWebhookView
-from .webhook_cases import WebhookBasicAuthTestsMixin, WebhookTestCase
+from .webhook_cases import WebhookBasicAuthTestCase, WebhookTestCase
 
 
 @tag('postmark')
-class PostmarkWebhookSecurityTestCase(WebhookTestCase, WebhookBasicAuthTestsMixin):
+class PostmarkWebhookSecurityTestCase(WebhookBasicAuthTestCase):
     def call_webhook(self):
         return self.client.post('/anymail/postmark/tracking/',
                                 content_type='application/json', data=json.dumps({}))
 
-    # Actual tests are in WebhookBasicAuthTestsMixin
+    # Actual tests are in WebhookBasicAuthTestCase
 
 
 @tag('postmark')

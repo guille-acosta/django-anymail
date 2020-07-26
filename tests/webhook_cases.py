@@ -25,7 +25,7 @@ class WebhookTestCase(AnymailTestMixin, SimpleTestCase):
     client_class = ClientWithCsrfChecks
 
     def setUp(self):
-        super(WebhookTestCase, self).setUp()
+        super().setUp()
         # Use correct basic auth by default (individual tests can override):
         self.set_basic_auth()
 
@@ -71,14 +71,23 @@ class WebhookTestCase(AnymailTestMixin, SimpleTestCase):
         return actual_kwargs
 
 
-# noinspection PyUnresolvedReferences
-class WebhookBasicAuthTestsMixin(object):
+class WebhookBasicAuthTestCase(WebhookTestCase):
     """Common test cases for webhook basic authentication.
 
     Instantiate for each ESP's webhooks by:
-    - mixing into WebhookTestCase
+    - subclassing
     - defining call_webhook to invoke the ESP's webhook
+    - adding or overriding any tests as appropriate
     """
+
+    def __init__(self, methodName='runTest'):
+        if self.__class__ is WebhookBasicAuthTestCase:
+            # don't run these tests on the abstract base implementation
+            methodName = 'runNoTestsInBaseClass'
+        super().__init__(methodName)
+
+    def runNoTestsInBaseClass(self):
+        pass
 
     should_warn_if_no_auth = True  # subclass set False if other webhook verification used
 

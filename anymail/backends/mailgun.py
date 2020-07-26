@@ -42,7 +42,7 @@ class EmailBackend(AnymailRequestsBackend):
                                       default="https://api.mailgun.net/v3")
         if not api_url.endswith("/"):
             api_url += "/"
-        super(EmailBackend, self).__init__(api_url, **kwargs)
+        super().__init__(api_url, **kwargs)
 
     def build_message_payload(self, message, defaults):
         return MailgunPayload(message, defaults, self)
@@ -88,7 +88,7 @@ class MailgunPayload(RequestsPayload):
         self.merge_metadata = {}
         self.to_emails = []
 
-        super(MailgunPayload, self).__init__(message, defaults, backend, auth=auth, *args, **kwargs)
+        super().__init__(message, defaults, backend, auth=auth, *args, **kwargs)
 
     def get_api_endpoint(self):
         if self.sender_domain is None:
@@ -104,7 +104,7 @@ class MailgunPayload(RequestsPayload):
         return "%s/messages" % quote(self.sender_domain, safe='')
 
     def get_request_params(self, api_url):
-        params = super(MailgunPayload, self).get_request_params(api_url)
+        params = super().get_request_params(api_url)
         non_ascii_filenames = [filename
                                for (field, (filename, content, mimetype)) in params["files"]
                                if filename is not None and not isascii(filename)]

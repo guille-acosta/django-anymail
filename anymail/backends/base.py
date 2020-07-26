@@ -22,7 +22,7 @@ class AnymailBaseBackend(BaseEmailBackend):
     """
 
     def __init__(self, *args, **kwargs):
-        super(AnymailBaseBackend, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.ignore_unsupported_features = get_anymail_setting('ignore_unsupported_features',
                                                                kwargs=kwargs, default=False)
@@ -206,7 +206,7 @@ class AnymailBaseBackend(BaseEmailBackend):
                                   (self.__class__.__module__, self.__class__.__name__))
 
 
-class BasePayload(object):
+class BasePayload:
     # Listing of EmailMessage/EmailMultiAlternatives attributes
     # to process into Payload. Each item is in the form:
     #   (attr, combiner, converter)

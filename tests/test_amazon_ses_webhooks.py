@@ -2,7 +2,7 @@ import json
 import warnings
 from datetime import datetime
 
-from django.test import override_settings, tag
+from django.test import SimpleTestCase, override_settings, tag
 from django.utils.timezone import utc
 from mock import ANY, patch
 
@@ -10,12 +10,11 @@ from anymail.exceptions import AnymailConfigurationError, AnymailInsecureWebhook
 from anymail.signals import AnymailTrackingEvent
 from anymail.webhooks.amazon_ses import AmazonSESTrackingWebhookView
 
-from .webhook_cases import WebhookBasicAuthTestsMixin, WebhookTestCase
+from .webhook_cases import WebhookBasicAuthTestCase, WebhookTestCase
 
 
-class AmazonSESWebhookTestsMixin(object):
+class AmazonSESWebhookTestsMixin(SimpleTestCase):
     def post_from_sns(self, path, raw_sns_message, **kwargs):
-        # noinspection PyUnresolvedReferences
         return self.client.post(
             path,
             content_type='text/plain; charset=UTF-8',  # SNS posts JSON as text/plain
@@ -27,12 +26,12 @@ class AmazonSESWebhookTestsMixin(object):
 
 
 @tag('amazon_ses')
-class AmazonSESWebhookSecurityTests(WebhookTestCase, AmazonSESWebhookTestsMixin, WebhookBasicAuthTestsMixin):
+class AmazonSESWebhookSecurityTests(AmazonSESWebhookTestsMixin, WebhookBasicAuthTestCase):
     def call_webhook(self):
         return self.post_from_sns('/anymail/amazon_ses/tracking/',
                                   {"Type": "Notification", "MessageId": "123", "Message": "{}"})
 
-    # Most actual tests are in WebhookBasicAuthTestsMixin
+    # Most actual tests are in WebhookBasicAuthTestCase
 
     def test_verifies_missing_auth(self):
         # Must handle missing auth header slightly differently from Anymail default 400 SuspiciousOperation:
@@ -412,7 +411,7 @@ class AmazonSESSubscriptionManagementTests(WebhookTestCase, AmazonSESWebhookTest
     # (Note that WebhookTestCase sets up ANYMAIL WEBHOOK_SECRET.)
 
     def setUp(self):
-        super(AmazonSESSubscriptionManagementTests, self).setUp()
+        super().setUp()
         # Mock boto3.session.Session().client('sns').confirm_subscription (and any other client operations)
         # (We could also use botocore.stub.Stubber, but mock works well with our test structure)
         self.patch_boto3_session = patch('anymail.webhooks.amazon_ses.boto3.session.Session', autospec=True)

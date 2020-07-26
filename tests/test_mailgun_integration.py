@@ -35,7 +35,7 @@ class MailgunBackendIntegrationTests(AnymailTestMixin, SimpleTestCase):
     """
 
     def setUp(self):
-        super(MailgunBackendIntegrationTests, self).setUp()
+        super().setUp()
         self.message = AnymailMessage('Anymail Mailgun integration test', 'Text content',
                                       'from@example.com', ['test+to1@anymail.info'])
         self.message.attach_alternative('<p>HTML content</p>', "text/html")

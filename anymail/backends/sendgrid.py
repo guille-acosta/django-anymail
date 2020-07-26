@@ -47,7 +47,7 @@ class EmailBackend(AnymailRequestsBackend):
                                       default="https://api.sendgrid.com/v3/")
         if not api_url.endswith("/"):
             api_url += "/"
-        super(EmailBackend, self).__init__(api_url, **kwargs)
+        super().__init__(api_url, **kwargs)
 
     def build_message_payload(self, message, defaults):
         return SendGridPayload(message, defaults, self)
@@ -84,9 +84,7 @@ class SendGridPayload(RequestsPayload):
         http_headers['Authorization'] = 'Bearer %s' % backend.api_key
         http_headers['Content-Type'] = 'application/json'
         http_headers['Accept'] = 'application/json'
-        super(SendGridPayload, self).__init__(message, defaults, backend,
-                                              headers=http_headers,
-                                              *args, **kwargs)
+        super().__init__(message, defaults, backend, headers=http_headers, *args, **kwargs)
 
     def get_api_endpoint(self):
         return "mail/send"

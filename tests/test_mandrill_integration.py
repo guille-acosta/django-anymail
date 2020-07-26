@@ -30,7 +30,7 @@ class MandrillBackendIntegrationTests(AnymailTestMixin, SimpleTestCase):
     """
 
     def setUp(self):
-        super(MandrillBackendIntegrationTests, self).setUp()
+        super().setUp()
         self.message = mail.EmailMultiAlternatives('Anymail Mandrill integration test', 'Text content',
                                                    'from@example.com', ['test+to1@anymail.info'])
         self.message.attach_alternative('<p>HTML content</p>', "text/html")

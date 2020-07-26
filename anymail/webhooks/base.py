@@ -10,62 +10,21 @@ from ..exceptions import AnymailInsecureWebhookWarning, AnymailWebhookValidation
 from ..utils import get_anymail_setting, collect_all_methods, get_request_basic_auth
 
 
-class AnymailBasicAuthMixin(object):
-    """Implements webhook basic auth as mixin to AnymailBaseWebhookView."""
-
-    # Whether to warn if basic auth is not configured.
-    # For most ESPs, basic auth is the only webhook security,
-    # so the default is True. Subclasses can set False if
-    # they enforce other security (like signed webhooks).
-    warn_if_no_basic_auth = True
-
-    # List of allowable HTTP basic-auth 'user:pass' strings.
-    basic_auth = None  # (Declaring class attr allows override by kwargs in View.as_view.)
-
-    def __init__(self, **kwargs):
-        self.basic_auth = get_anymail_setting('webhook_secret', default=[],
-                                              kwargs=kwargs)  # no esp_name -- auth is shared between ESPs
-
-        # Allow a single string:
-        if isinstance(self.basic_auth, str):
-            self.basic_auth = [self.basic_auth]
-        if self.warn_if_no_basic_auth and len(self.basic_auth) < 1:
-            warnings.warn(
-                "Your Anymail webhooks are insecure and open to anyone on the web. "
-                "You should set WEBHOOK_SECRET in your ANYMAIL settings. "
-                "See 'Securing webhooks' in the Anymail docs.",
-                AnymailInsecureWebhookWarning)
-        # noinspection PyArgumentList
-        super(AnymailBasicAuthMixin, self).__init__(**kwargs)
-
-    def validate_request(self, request):
-        """If configured for webhook basic auth, validate request has correct auth."""
-        if self.basic_auth:
-            request_auth = get_request_basic_auth(request)
-            # Use constant_time_compare to avoid timing attack on basic auth. (It's OK that any()
-            # can terminate early: we're not trying to protect how many auth strings are allowed,
-            # just the contents of each individual auth string.)
-            auth_ok = any(constant_time_compare(request_auth, allowed_auth)
-                          for allowed_auth in self.basic_auth)
-            if not auth_ok:
-                # noinspection PyUnresolvedReferences
-                raise AnymailWebhookValidationFailure(
-                    "Missing or invalid basic auth in Anymail %s webhook" % self.esp_name)
-
-
 # Mixin note: Django's View.__init__ doesn't cooperate with chaining,
 # so all mixins that need __init__ must appear before View in MRO.
-class AnymailBaseWebhookView(AnymailBasicAuthMixin, View):
-    """Base view for processing ESP event webhooks
+class AnymailCoreWebhookView(View):
+    """Common view for processing ESP event webhooks
 
-    ESP-specific implementations should subclass
-    and implement parse_events. They may also
-    want to implement validate_request
+    ESP-specific implementations will need to implement parse_events.
+
+    ESP-specific implementations should generally subclass
+    AnymailBaseWebhookView instead, to pick up basic auth.
+    They may also want to implement validate_request
     if additional security is available.
     """
 
     def __init__(self, **kwargs):
-        super(AnymailBaseWebhookView, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.validators = collect_all_methods(self.__class__, 'validate_request')
 
     # Subclass implementation:
@@ -105,7 +64,7 @@ class AnymailBaseWebhookView(AnymailBasicAuthMixin, View):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
-        return super(AnymailBaseWebhookView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def head(self, request, *args, **kwargs):
         # Some ESPs verify the webhook with a HEAD request at configuration time
@@ -142,3 +101,51 @@ class AnymailBaseWebhookView(AnymailBasicAuthMixin, View):
         """
         raise NotImplementedError("%s.%s must declare esp_name class attr" %
                                   (self.__class__.__module__, self.__class__.__name__))
+
+
+class AnymailBasicAuthMixin(AnymailCoreWebhookView):
+    """Implements webhook basic auth as mixin to AnymailCoreWebhookView."""
+
+    # Whether to warn if basic auth is not configured.
+    # For most ESPs, basic auth is the only webhook security,
+    # so the default is True. Subclasses can set False if
+    # they enforce other security (like signed webhooks).
+    warn_if_no_basic_auth = True
+
+    # List of allowable HTTP basic-auth 'user:pass' strings.
+    basic_auth = None  # (Declaring class attr allows override by kwargs in View.as_view.)
+
+    def __init__(self, **kwargs):
+        self.basic_auth = get_anymail_setting('webhook_secret', default=[],
+                                              kwargs=kwargs)  # no esp_name -- auth is shared between ESPs
+
+        # Allow a single string:
+        if isinstance(self.basic_auth, str):
+            self.basic_auth = [self.basic_auth]
+        if self.warn_if_no_basic_auth and len(self.basic_auth) < 1:
+            warnings.warn(
+                "Your Anymail webhooks are insecure and open to anyone on the web. "
+                "You should set WEBHOOK_SECRET in your ANYMAIL settings. "
+                "See 'Securing webhooks' in the Anymail docs.",
+                AnymailInsecureWebhookWarning)
+        super().__init__(**kwargs)
+
+    def validate_request(self, request):
+        """If configured for webhook basic auth, validate request has correct auth."""
+        if self.basic_auth:
+            request_auth = get_request_basic_auth(request)
+            # Use constant_time_compare to avoid timing attack on basic auth. (It's OK that any()
+            # can terminate early: we're not trying to protect how many auth strings are allowed,
+            # just the contents of each individual auth string.)
+            auth_ok = any(constant_time_compare(request_auth, allowed_auth)
+                          for allowed_auth in self.basic_auth)
+            if not auth_ok:
+                raise AnymailWebhookValidationFailure(
+                    "Missing or invalid basic auth in Anymail %s webhook" % self.esp_name)
+
+
+class AnymailBaseWebhookView(AnymailBasicAuthMixin, AnymailCoreWebhookView):
+    """
+    Abstract base class for most webhook views, enforcing HTTP basic auth security
+    """
+    pass

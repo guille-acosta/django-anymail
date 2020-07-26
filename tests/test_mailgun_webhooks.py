@@ -12,7 +12,7 @@ from anymail.exceptions import AnymailConfigurationError
 from anymail.signals import AnymailTrackingEvent
 from anymail.webhooks.mailgun import MailgunTrackingWebhookView
 
-from .webhook_cases import WebhookTestCase, WebhookBasicAuthTestsMixin
+from .webhook_cases import WebhookBasicAuthTestCase, WebhookTestCase
 
 TEST_WEBHOOK_SIGNING_KEY = 'TEST_WEBHOOK_SIGNING_KEY'
 
@@ -99,14 +99,14 @@ class MailgunWebhookSettingsTestCase(WebhookTestCase):
 
 @tag('mailgun')
 @override_settings(ANYMAIL_MAILGUN_WEBHOOK_SIGNING_KEY=TEST_WEBHOOK_SIGNING_KEY)
-class MailgunWebhookSecurityTestCase(WebhookTestCase, WebhookBasicAuthTestsMixin):
+class MailgunWebhookSecurityTestCase(WebhookBasicAuthTestCase):
     should_warn_if_no_auth = False  # because we check webhook signature
 
     def call_webhook(self):
         return self.client.post('/anymail/mailgun/tracking/', content_type="application/json",
                                 data=json.dumps(mailgun_sign_payload({'event-data': {'event': 'delivered'}})))
 
-    # Additional tests are in WebhookBasicAuthTestsMixin
+    # Additional tests are in WebhookBasicAuthTestCase
 
     def test_verifies_correct_signature(self):
         response = self.client.post('/anymail/mailgun/tracking/', content_type="application/json",

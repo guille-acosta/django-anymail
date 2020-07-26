@@ -150,8 +150,7 @@ class ClientWithCsrfChecks(Client):
     """
 
     def __init__(self, **defaults):
-        super(ClientWithCsrfChecks, self).__init__(
-            enforce_csrf_checks=True, **defaults)
+        super().__init__(enforce_csrf_checks=True, **defaults)
 
 
 # dedent for bytestrs

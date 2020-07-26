@@ -25,7 +25,7 @@ class EmailBackend(AnymailBaseBackend):
         # Allow replacing the payload, for testing.
         # (Real backends would generally not implement this option.)
         self._payload_class = kwargs.pop('payload_class', TestPayload)
-        super(EmailBackend, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if not hasattr(mail, 'outbox'):
             mail.outbox = []  # see django.core.mail.backends.locmem
 

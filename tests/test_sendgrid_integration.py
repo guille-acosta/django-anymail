@@ -38,7 +38,7 @@ class SendGridBackendIntegrationTests(AnymailTestMixin, SimpleTestCase):
     """
 
     def setUp(self):
-        super(SendGridBackendIntegrationTests, self).setUp()
+        super().setUp()
         self.message = AnymailMessage('Anymail SendGrid integration test', 'Text content',
                                       'from@example.com', ['to@sink.sendgrid.net'])
         self.message.attach_alternative('<p>HTML content</p>', "text/html")

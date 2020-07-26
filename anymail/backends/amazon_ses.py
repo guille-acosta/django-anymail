@@ -28,7 +28,7 @@ class EmailBackend(AnymailBaseBackend):
 
     def __init__(self, **kwargs):
         """Init options from Django settings"""
-        super(EmailBackend, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         # AMAZON_SES_CLIENT_PARAMS is optional - boto3 can find credentials several other ways
         self.session_params, self.client_params = _get_anymail_boto3_params(kwargs=kwargs)
         self.configuration_set_name = get_anymail_setting("configuration_set_name", esp_name=self.esp_name,
@@ -93,7 +93,7 @@ class AmazonSESBasePayload(BasePayload):
 
 class AmazonSESSendRawEmailPayload(AmazonSESBasePayload):
     def init_payload(self):
-        super(AmazonSESSendRawEmailPayload, self).init_payload()
+        super().init_payload()
         self.all_recipients = []
         self.mime_message = self.message.message()
 
@@ -243,7 +243,7 @@ class AmazonSESSendRawEmailPayload(AmazonSESBasePayload):
 
 class AmazonSESSendBulkTemplatedEmailPayload(AmazonSESBasePayload):
     def init_payload(self):
-        super(AmazonSESSendBulkTemplatedEmailPayload, self).init_payload()
+        super().init_payload()
         # late-bind recipients and merge_data in call_send_api
         self.recipients = {"to": [], "cc": [], "bcc": []}
         self.merge_data = {}

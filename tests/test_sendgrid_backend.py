@@ -14,7 +14,7 @@ from anymail.exceptions import (AnymailAPIError, AnymailConfigurationError, Anym
                                 AnymailUnsupportedFeature, AnymailWarning)
 from anymail.message import attach_inline_image_file
 
-from .mock_requests_backend import RequestsBackendMockAPITestCase, SessionSharingTestCasesMixin
+from .mock_requests_backend import RequestsBackendMockAPITestCase, SessionSharingTestCases
 from .utils import sample_image_content, sample_image_path, SAMPLE_IMAGE_FILENAME, AnymailTestMixin
 
 
@@ -26,7 +26,7 @@ class SendGridBackendMockAPITestCase(RequestsBackendMockAPITestCase):
     DEFAULT_STATUS_CODE = 202  # SendGrid v3 uses '202 Accepted' for success (in most cases)
 
     def setUp(self):
-        super(SendGridBackendMockAPITestCase, self).setUp()
+        super().setUp()
 
         # Patch uuid4 to generate predictable anymail_ids for testing
         patch_uuid4 = patch('anymail.backends.sendgrid.uuid.uuid4',
@@ -872,9 +872,9 @@ class SendGridBackendRecipientsRefusedTests(SendGridBackendMockAPITestCase):
 
 
 @tag('sendgrid')
-class SendGridBackendSessionSharingTestCase(SessionSharingTestCasesMixin, SendGridBackendMockAPITestCase):
+class SendGridBackendSessionSharingTestCase(SessionSharingTestCases, SendGridBackendMockAPITestCase):
     """Requests session sharing tests"""
-    pass  # tests are defined in the mixin
+    pass  # tests are defined in SessionSharingTestCases
 
 
 @tag('sendgrid')

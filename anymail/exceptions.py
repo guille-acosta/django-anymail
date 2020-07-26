@@ -35,7 +35,7 @@ class AnymailError(Exception):
             self.response = kwargs.get('response', None)
         else:
             self.response = kwargs.pop('response', None)
-        super(AnymailError, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def __str__(self):
         parts = [
@@ -100,7 +100,7 @@ class AnymailRequestsAPIError(AnymailAPIError, HTTPError):
     """Exception for unsuccessful response from a requests API."""
 
     def __init__(self, *args, **kwargs):
-        super(AnymailRequestsAPIError, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if self.response is not None:
             self.status_code = self.response.status_code
 
@@ -111,7 +111,7 @@ class AnymailRecipientsRefused(AnymailError):
     def __init__(self, message=None, *args, **kwargs):
         if message is None:
             message = "All message recipients were rejected or invalid"
-        super(AnymailRecipientsRefused, self).__init__(message, *args, **kwargs)
+        super().__init__(message, *args, **kwargs)
 
 
 class AnymailInvalidAddress(AnymailError, ValueError):
@@ -151,7 +151,7 @@ class AnymailSerializationError(AnymailError, TypeError):
                       "Try converting it to a string or number first." % esp_name
         if orig_err is not None:
             message += "\n%s" % str(orig_err)
-        super(AnymailSerializationError, self).__init__(message, *args, **kwargs)
+        super().__init__(message, *args, **kwargs)
 
 
 class AnymailCancelSend(AnymailError):
@@ -179,7 +179,7 @@ class AnymailImproperlyInstalled(AnymailConfigurationError, ImportError):
         message = "The %s package is required to use this ESP, but isn't installed.\n" \
                   "(Be sure to use `pip install django-anymail[%s]` " \
                   "with your desired ESPs.)" % (missing_package, backend)
-        super(AnymailImproperlyInstalled, self).__init__(message)
+        super().__init__(message)
 
 
 # Warnings
@@ -198,7 +198,7 @@ class AnymailDeprecationWarning(AnymailWarning, DeprecationWarning):
 
 # Helpers
 
-class _LazyError(object):
+class _LazyError:
     """An object that sits inert unless/until used, then raises an error"""
     def __init__(self, error):
         self._error = error

@@ -10,7 +10,7 @@ from .utils import AnymailTestMixin, sample_image_content
 class InlineImageTests(AnymailTestMixin, SimpleTestCase):
     def setUp(self):
         self.message = EmailMultiAlternatives()
-        super(InlineImageTests, self).setUp()
+        super().setUp()
 
     @patch("email.utils.socket.getfqdn")
     def test_default_domain(self, mock_getfqdn):

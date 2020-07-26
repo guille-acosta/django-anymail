@@ -14,7 +14,7 @@ class MinimalRequestsBackend(AnymailRequestsBackend):
     api_url = "https://httpbin.org/post"  # helpful echoback endpoint for live testing
 
     def __init__(self, **kwargs):
-        super(MinimalRequestsBackend, self).__init__(self.api_url, **kwargs)
+        super().__init__(self.api_url, **kwargs)
 
     def build_message_payload(self, message, defaults):
         _payload_init = getattr(message, "_payload_init", {})
@@ -46,7 +46,7 @@ class RequestsBackendBaseTestCase(RequestsBackendMockAPITestCase):
     """Test common functionality in AnymailRequestsBackend"""
 
     def setUp(self):
-        super(RequestsBackendBaseTestCase, self).setUp()
+        super().setUp()
         self.message = AnymailMessage('Subject', 'Text Body', 'from@example.com', ['to@example.com'])
 
     def test_minimal_requests_backend(self):

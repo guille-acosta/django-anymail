@@ -12,7 +12,7 @@ from anymail.exceptions import (AnymailAPIError, AnymailRecipientsRefused,
                                 AnymailSerializationError, AnymailUnsupportedFeature)
 from anymail.message import attach_inline_image
 
-from .mock_requests_backend import RequestsBackendMockAPITestCase, SessionSharingTestCasesMixin
+from .mock_requests_backend import RequestsBackendMockAPITestCase, SessionSharingTestCases
 from .utils import sample_image_content, sample_image_path, SAMPLE_IMAGE_FILENAME, AnymailTestMixin, decode_att
 
 
@@ -28,7 +28,7 @@ class MandrillBackendMockAPITestCase(RequestsBackendMockAPITestCase):
     }]"""
 
     def setUp(self):
-        super(MandrillBackendMockAPITestCase, self).setUp()
+        super().setUp()
         # Simple message useful for many tests
         self.message = mail.EmailMultiAlternatives('Subject', 'Text Body', 'from@example.com', ['to@example.com'])
 
@@ -608,9 +608,9 @@ class MandrillBackendRecipientsRefusedTests(MandrillBackendMockAPITestCase):
 
 
 @tag('mandrill')
-class MandrillBackendSessionSharingTestCase(SessionSharingTestCasesMixin, MandrillBackendMockAPITestCase):
+class MandrillBackendSessionSharingTestCase(SessionSharingTestCases, MandrillBackendMockAPITestCase):
     """Requests session sharing tests"""
-    pass  # tests are defined in the mixin
+    pass  # tests are defined in SessionSharingTestCases
 
 
 @tag('mandrill')
